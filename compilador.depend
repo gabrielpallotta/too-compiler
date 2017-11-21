@@ -1,0 +1,66 @@
+# depslib dependency file v1.0
+1510844492 source:f:\cotuca\2° ano\4° semestre\too\c++\compilador\analisadorlexico.cpp
+	"AnalisadorLexico.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1510069302 f:\cotuca\2° ano\4° semestre\too\c++\compilador\header\analisadorlexico.h
+	<stdio.h>
+
+1510225900 source:f:\cotuca\2° ano\4° semestre\too\c++\compilador\linkedlist.cpp
+	"header/LinkedList.h"
+
+1510226364 f:\cotuca\2° ano\4° semestre\too\c++\compilador\header\linkedlist.h
+	<iostream>
+
+1510843108 source:f:\cotuca\2° ano\4° semestre\too\c++\compilador\main.cpp
+	<iostream>
+
+1510845122 source:f:\cotuca\2° ano\4° semestre\too\c++\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1510845078 f:\cotuca\2° ano\4° semestre\too\c++\compilador\header\simbolo.h
+	<vector>
+
+1510845004 source:f:\cotuca\2° ano\4° semestre\too\c++\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<vector>
+
+1510844512 f:\cotuca\2° ano\4° semestre\too\c++\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
+1510310992 f:\cotuca\2° ano\4° semestre\too\c++\compilador\analisadorlexico.h
+	<stdio.h>
+
+1510846756 source:g:\cotuca\2° ano\4° semestre\too\c++\compilador\analisadorlexico.cpp
+	"AnalisadorLexico.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1510846792 g:\cotuca\2° ano\4° semestre\too\c++\compilador\analisadorlexico.h
+	<stdio.h>
+
+1510843108 source:g:\cotuca\2° ano\4° semestre\too\c++\compilador\main.cpp
+	<iostream>
+
+1510845122 source:g:\cotuca\2° ano\4° semestre\too\c++\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1510845078 g:\cotuca\2° ano\4° semestre\too\c++\compilador\header\simbolo.h
+	<vector>
+
+1510845004 source:g:\cotuca\2° ano\4° semestre\too\c++\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<vector>
+
+1510844512 g:\cotuca\2° ano\4° semestre\too\c++\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
