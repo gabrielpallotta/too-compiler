@@ -7,45 +7,47 @@ using namespace std;
 
 typedef enum
 {
-    inteiro,
-    booleano
-} Tipo;
+    var_inteiro,
+    var_booleano
+} TipoVar;
 
 class Simbolo
 {
 	private:
 		char nome [256];
 		unsigned char nivel;
+	public:
+		Simbolo(char[256], int);
 };
 
 class Parametro: public Simbolo
 {
 	private:
-		Tipo tipo;
+		TipoVar tipo;
 	public:
-		Parametro(Tipo);
-		Tipo getTipo();
+		Parametro(char[256], int, TipoVar);
+		TipoVar getTipo();
 };
 
 
 class Variavel: public Simbolo
 {
 	private:
-		Tipo tipo;
+		TipoVar tipo;
 	public:
-		Variavel(Tipo);
-		Tipo getTipo();
+		Variavel(char[256], int, TipoVar);
+		TipoVar getTipo();
 };
 
 class Funcao: public Simbolo
 {
 	private:
-		Tipo tipoDeRetorno;
+		TipoVar tipoDeRetorno;
 		vector<Parametro> parametros;
 	public:
-		Funcao(Tipo);
+		Funcao(char[256], int, TipoVar);
 		int getNumeroParametros();
-		Tipo getTipoDeRetorno();
+		TipoVar getTipoDeRetorno();
 };
 
 class Procedimento: public Simbolo
@@ -53,6 +55,7 @@ class Procedimento: public Simbolo
 	private:
 		vector<Parametro> parametros;
 	public:
+		Procedimento(char[256], int);
 		int getNumeroParametros();
 		void adicionarParametro(Parametro);
 };

@@ -4,35 +4,35 @@
 using namespace std;
 
 // Parametro
-Parametro::Parametro (Tipo tipo)
+Parametro::Parametro (TipoVar tipo)
 {
 	this->tipo = tipo;
 }
 
-Tipo Parametro::getTipo ()
+TipoVar Parametro::getTipo ()
 {
 	return this->tipo;
 }
 
 // Variavel
-Variavel::Variavel (Tipo tipo)
+Variavel::Variavel (TipoVar tipo)
 {
 	this->tipo = tipo;
 }
 
-Tipo Variavel::getTipo ()
+TipoVar Variavel::getTipo ()
 {
 	return this->tipo;
 }
 
 // Funcao
-Funcao::Funcao (Tipo tipoDeRetorno)
+Funcao::Funcao (TipoVar tipoDeRetorno)
 {
 	this->tipoDeRetorno = tipoDeRetorno;
 	this->parametros = vector<Parametro>();
 }
 
-Tipo Funcao::getTipoDeRetorno ()
+TipoVar Funcao::getTipoDeRetorno ()
 {
 	return this->tipoDeRetorno;
 }

@@ -5,7 +5,9 @@
 class AnalisadorSintatico
 {
 	private:
-        AnalisadorLexico analex;
+		AnalisadorLexico analex;
+		TabelaDeSimbolos tabela;
+		int nivelAtual;
 	public:
 		void compilaInicioDePrograma();
 	    void compilaProgramaPrincipal();

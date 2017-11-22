@@ -1,8 +1,13 @@
-#include "AnalisadorLexico.h"
+#include "header/AnalisadorLexico.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+
+const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":"};
+
+const int nPalavras   = 16;
+const int nOperadores = 10;
 
 AnalisadorLexico::AnalisadorLexico (char* nomeArq)
 {
@@ -11,21 +16,24 @@ AnalisadorLexico::AnalisadorLexico (char* nomeArq)
 
 int AnalisadorLexico::temMaisPedacos()
 {
+	if (feof(arquivo))
+			return 0;
+
 	char c = fgetc(arquivo);
 	while (c == '\t' || c == ' ' || c == '\n')
-    {
-        c = fgetc(arquivo);
-            if (c == EOF)
-                return 0;
-    }
+  	{
+      c = fgetc(arquivo);
+          if (feof(arquivo))
+              return 0;
+  	}
 
-    ungetc(c, arquivo);
+  ungetc(c, arquivo);
 	return 1;
 }
 
 int QualOTipo(char* palavra) //busca sequencial pelos operadores e palavras
 {
-    int i = nPalavras;
+    int i = 0;
     for (; i < nPalavras + nOperadores - 1; i++)
     {
         int comparacao = strcmp(palavrasReservadas[i], palavra);
@@ -37,31 +45,42 @@ int QualOTipo(char* palavra) //busca sequencial pelos operadores e palavras
     return -1;
 }
 
-TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
+TipoPedaco  AnalisadorLexico::proximoPedaco(bool consuma)
 {
 	if (!temMaisPedacos())
 		return (TipoPedaco)fimDeArquivo;
 
+	int i = 0;
 	char* s = (char*)malloc(100*sizeof(char));
-	char  c = 'x';
+	char  c = fgetc(arquivo);
 
-	while (c != '\t' || c != ' ' || c != '\n' || c != EOF)
+	while (c == '\t' || c == ' ' || c == '\n')
 	{
-	    c = fgetc(arquivo);
-		s = strcat(s, &c);
+		c = fgetc(arquivo);
 	}
 
-    if (!consuma)
-        for (int i = 0; i < strlen(s); i++)
-            ungetc(s[strlen(s) - i], arquivo);
+	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == EOF || i >= 99))
+	{
+		s[i] = c;
+		c = fgetc(arquivo);
+		i++;
+	}
+	s[i] = '\x0';
 
-	int i = QualOTipo(s);
+	if (consuma)
+	{
+		int size = strlen(s);
+		for (int i = 1; i <= size; i++)
+			ungetc(arquivo, s[size - i]);
+	}
+
+	i = QualOTipo(s);
 
 	if (i > 0)
 	{
 		return static_cast<TipoPedaco>(i);   //retorna um TipoPedaco
-                                             //com o mesmo indice
-                                             //do vetor de palavras
+                                         //com o mesmo indice
+                                         //do vetor de palavras
 	}
 	else
 	{
@@ -71,10 +90,10 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 			for(;i<strlen(s);i++)
 				if (!isdigit(s[i]))
 				{
-					return (TipoPedaco)desconhecido;
+						return (TipoPedaco)desconhecido;
 				}
-            ultimoValor = atoi(s);
-            return (TipoPedaco)numero;
+					ultimoValor = atoi(s);
+					return (TipoPedaco)numero;
 		}
 		else
 		{

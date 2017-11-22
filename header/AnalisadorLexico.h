@@ -6,7 +6,7 @@
 typedef enum {
 	e,
 	comeco,
-	boleano,
+	booleano,
 	senao,
 	fim,
 	falso,
@@ -31,6 +31,7 @@ typedef enum {
     mais,
     menos,
     ponto,
+    virgula,
     pontoVirgula,
     doisPontos,
 	desconhecido,
@@ -39,16 +40,15 @@ typedef enum {
 	fimDeArquivo
 } TipoPedaco;
 
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ";", ":"};
-
-const int nPalavras   = 16;
-const int nOperadores = 10;
+extern const char* palavrasReservadas[];
+extern const int nPalavras;
+extern const int nOperadores;
 
 class AnalisadorLexico
 {
     public:
 		AnalisadorLexico(char*);
-		TipoPedaco proximoPedaco(FILE*);
+		TipoPedaco proximoPedaco(bool);
 		int        temMaisPedacos();
 		char*      getNome();
 		int        getValor();
