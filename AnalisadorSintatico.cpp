@@ -256,7 +256,29 @@ void AnalisadorSintatico::compilaFuncao();
 
 void AnalisadorSintatico::compilaSe();
 {
-
+    TipoPedaco prox = analex.proximoPedaco(true);
+    if (prox != se)
+        throw new string ("Esperado 'if'.");
+    
+    prox = analex.proximoPedaco(true);
+    if (prox != abreParenteses)    
+        throw new string ("Esperado '(' após 'if'.");
+    
+    while (true)
+    {
+        compilaExpressaoLogica();
+        prox = analex.proximoPedaco(true);
+        if (prox == e || prox == ou)
+            continue;
+        else
+        {
+            prox = analex.proximoPedaco(true);
+            if (prox != fechaParenteses)
+                throw new string ("Esperado ')' no fim da condição.");
+            else
+                break;
+        }
+    }
 }
 
 void AnalisadorSintatico::compilaEnquanto();
@@ -316,5 +338,16 @@ void AnalisadorSintatico::compilaFatorRelacional();
 
 void AnalisadorSintatico::compilaExpressaoLogica();
 {
+    TipoPedaco prox = analex.proximoPedaco(true);
 
+    if (!(prox == identificador || prox == numero))
+        throw new string ("Esperado identificador ou valor");
+    
+    prox = analex.proximoPedaco(true);
+    if (!(prox == igual || prox == menor || prox == menorIgual || prox == maior || prox == maiorIgual || prox == diferente))
+        throw new string("Esperado comparador");
+    
+    prox = analex.proximoPedaco(true);
+    if (!(prox == identificador || prox == numero))
+        throw new string ("Esperado identificador ou valor");
 }
