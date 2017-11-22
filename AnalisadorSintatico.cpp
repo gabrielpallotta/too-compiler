@@ -14,11 +14,11 @@ void AnalisadorSintatico::compilaInicioDePrograma()
 {
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != programa)
-        throw new string ("Esperado 'program' no in?cio do programa.");
+        throw new string ("Esperado 'program' no inicio do programa.");
 
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-        throw new string ("Esperado identificador na declara??o do programa.");
+        throw new string ("Esperado identificador na declaracao do programa.");
 }
 
 void AnalisadorSintatico::compilaProgramaPrincipal()
@@ -36,12 +36,12 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel();
 {
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != variavel)
-        throw new string ("Esperado 'var' na declara??o de vari?vel.");
+        throw new string ("Esperado 'var' na declaracao de vari?vel.");
 
     prox = analex.proximoPedaco(false);
 
     if (prox != identificador)
-        throw new string ("Esperado nome de vari?vel na declar??o.")
+        throw new string ("Esperado nome de variavel na declarcao.")
 
     while (prox == identificador)
     {
@@ -54,11 +54,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel();
         {
             prox = analex.proximoPedaco(true)
             if (prox != virgula)
-                throw new string ("Esperado ',' ap?s declara??o de vari?vel.");
+                throw new string ("Esperado ',' apos declaracao de variavel.");
 
             prox = analex.proximoPedaco(true)
             if (prox != identificador)
-                throw new string ("Esperado identificador ap?s v?rgula na declara??o de vari?vel.");
+                throw new string ("Esperado identificador apos virgula na declarcao de variavel.");
 
             // Guarda no vetor de vari?veis a vari?vel atual
             variaveis.push_back(analex.getNome());
@@ -66,7 +66,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel();
 
         prox = analex.proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-            throw new string ("Esperado tipo de vari?vel (inteiro ou booleano) ap?s sua declara??o.");
+            throw new string ("Esperado tipo de variavel (inteiro ou booleano) apos sua declaracao.");
         
         TipoVar var;
 
@@ -88,22 +88,22 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento();
 
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != procedimento)
-        throw new string ("Esperado 'procedure' na declara??o de procedimento.");
+        throw new string ("Esperado 'procedure' na declaracao de procedimento.");
 
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-        throw new string ("Esperado nome do procedimento na declara??o.");
+        throw new string ("Esperado nome do procedimento na declaracao.");
 
     Procedimento proc = new Procedimento(analex.getNome(), nivelAtual);
 
     prox = analex.proximoPedaco(true);
     if (prox != abreParenteses)
-        throw new string ("Esperado '(' na declara??o de procedimento.");
+        throw new string ("Esperado '(' na declaracao de procedimento.");
 
     prox = analex.proximoPedaco(true);
 
     if (prox != identificador && prox != fechaParenteses)
-        throw new string ("Esperado par?metro ou ')' na declara??o de procedimento.");
+        throw new string ("Esperado parametro ou ')' na declaracao de procedimento.");
 
     while (prox == identificador)
     {
@@ -116,11 +116,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento();
         {
             prox = analex.proximoPedaco(true)
             if (prox != virgula)
-                throw new string ("Esperado ',' para separar par?metro.");
+                throw new string ("Esperado ',' para separar parametro.");
 
             prox = analex.proximoPedaco(true)
             if (prox != identificador)
-                throw new string ("Esperado par?metro na declara??o de proceimento.");
+                throw new string ("Esperado parametro na declaracao de proceimento.");
 
             // Guarda no vetor de vari?veis a vari?vel atual
             variaveis.push_back(analex.getNome());
@@ -128,7 +128,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento();
 
         prox = analex.proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-                throw new string ("Esperado tipo de vari?vel (inteiro ou booleano) ap?s sua declara??o.");
+                throw new string ("Esperado tipo de vari?vel (inteiro ou booleano) apos sua declaracao.");
 
         TipoVar var;
 
@@ -143,7 +143,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento();
         prox = analex.proximoPedaco(true);
 
         if (prox != ',' && prox != ')')
-            throw new string ("Esperado ',' ou ')' na declara??o de procedimento.");
+            throw new string ("Esperado ',' ou ')' na declaracao de procedimento.");
 
         prox = analex.proximoPedaco(true);
     }
@@ -163,17 +163,17 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao();
     nivelAtual++;
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != funcao)
-        throw new string ("Esperado 'function' na declara??o de fun??o.");
+        throw new string ("Esperado 'function' na declaracao de funcao.");
     
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-        throw new string ("Esperado identificador na declara??o de fun??o.");
+        throw new string ("Esperado identificador na declaracao de funcao.");
 
     string nomeFuncao = getNome();
 
     prox = analex.proximoPedaco(true);
     if (prox != abreParenteses)
-        throw new string ("Esperado '(' na declara??o de fun??o.");
+        throw new string ("Esperado '(' na declaracao de funcao.");
 
     prox = analex.proximoPedaco(true);
     
@@ -186,11 +186,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao();
         {
             prox = analex.proximoPedaco(true);
             if (prox != virgula)
-                throw new string ("Esperado ',' ap?s declara??o de par?metro na declara??o de fun??o.");
+                throw new string ("Esperado ',' apos declaracao de parametro na declaracao de funcao.");
 
             prox = analex.proximoPedaco(true)
             if (prox != identificador)
-                throw new string ("Esperado identificador ap?s v?rgula na declara??o de fun??o.");
+                throw new string ("Esperado identificador apos virgula na declaracao de funcao.");
             
             // Guarda no vetor de par?metros o par?metro atual
             parametros.push_back(analex.getValor());
@@ -200,7 +200,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao();
         
         prox = analex.proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-            throw new string ("Esperado tipo de par?metro (inteiro ou booleano) ap?s sua declara??o.");
+            throw new string ("Esperado tipo de parametro (inteiro ou booleano) apos sua declaracao.");
         
         TipoVar par;
         
@@ -219,11 +219,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao();
 
     prox = analex.proximoPedaco(true);
     if (prox != doisPontos)
-        throw new string ("Esperado ':' ap?s declara??o de par?metros.");
+        throw new string ("Esperado ':' apos declaracao de parametros.");
 
     prox = analex.proximoPedaco(true);
     if (prox != inteiro && prox != booleano)
-        throw new string ("Esperado tipo de retorno (inteiro ou booleano) ap?s declara??o de fun??o.");
+        throw new string ("Esperado tipo de retorno (inteiro ou booleano) ap?s declaracao de funcao.");
 
     if (prox == inteiro)
         TipoVar ret = var_inteiro;
