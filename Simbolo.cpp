@@ -42,6 +42,11 @@ int Funcao::getNumeroParametros ()
 	return this->parametros.size();
 }
 
+void Funcao::adicionarParametro (Parametro p)
+{
+	this->parametros.push_back(p);
+}
+
 //Procedimento
 int Procedimento::getNumeroParametros ()
 {
