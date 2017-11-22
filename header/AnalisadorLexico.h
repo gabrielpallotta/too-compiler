@@ -36,6 +36,7 @@ typedef enum {
 	doisPontos,
 	abreParenteses,
 	fechaParenteses,
+	ou,
 	desconhecido,
 	identificador,
 	numero,
