@@ -12,11 +12,11 @@ void AnalisadorSintatico::compilaInicioDePrograma()
 {
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != programa)
-        throw new string ("Esperado 'program' no início do programa.");
+        throw new string ("Esperado 'program' no inï¿½cio do programa.");
 
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-        throw new string ("Esperado identificador na declaração do programa.");
+        throw new string ("Esperado identificador na declaraï¿½ï¿½o do programa.");
 }
 
 void AnalisadorSintatico::compilaProgramaPrincipal()
@@ -34,11 +34,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel();
 {
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != variavel)
-        throw new string ("Esperado 'var' na declaração de variável.");
+        throw new string ("Esperado 'var' na declaraï¿½ï¿½o de variï¿½vel.");
 
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-            throw new string ("Esperado identificador na declaração de variável.");
+            throw new string ("Esperado identificador na declaraï¿½ï¿½o de variï¿½vel.");
 
     prox = analex.proximoPedaco(true);
 
@@ -52,22 +52,22 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel();
         {
             prox = analex.proximoPedaco(true)
             if (prox != virgula)
-                throw new string ("Esperado ',' após declaração de variável.");
+                throw new string ("Esperado ',' apï¿½s declaraï¿½ï¿½o de variï¿½vel.");
 
             prox = analex.proximoPedaco(true)
             if (prox != identificador)
-                throw new string ("Esperado identificador após vírgula na declaração de variável.");
-            
-            // Guarda no vetor de variáveis a variável atual
+                throw new string ("Esperado identificador apï¿½s vï¿½rgula na declaraï¿½ï¿½o de variï¿½vel.");
+
+            // Guarda no vetor de variï¿½veis a variï¿½vel atual
             variaveis.push_back(analex.getValor());
         }
 
         prox = analex.proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-                throw new string ("Esperado tipo de variável (inteiro ou booleano) após sua declaração.");
-        
+                throw new string ("Esperado tipo de variï¿½vel (inteiro ou booleano) apï¿½s sua declaraï¿½ï¿½o.");
+
         TipoVar var;
-        
+
         if (prox == inteiro)
             var = var_inteiro;
         else
@@ -86,11 +86,11 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento();
 {
     TipoPedaco prox = analex.proximoPedaco(true);
     if (prox != procedimento)
-        throw new string ("Esperado 'procedure' na declaração de procedimento.");
+        throw new string ("Esperado 'procedure' na declaraï¿½ï¿½o de procedimento.");
 
     prox = analex.proximoPedaco(true);
     if (prox != identificador)
-        throw new string ("Esperado identificador na declaração de procedimento.");
+        throw new string ("Esperado identificador na declaraï¿½ï¿½o de procedimento.");
 
 
 }
@@ -114,7 +114,29 @@ void AnalisadorSintatico::compilaFuncao();
 
 void AnalisadorSintatico::compilaSe();
 {
-
+    TipoPedaco prox = analex.proximoPedaco(true);
+    if (prox != se)
+        throw new string ("Esperado 'if'.");
+    
+    prox = analex.proximoPedaco(true);
+    if (prox != abreParenteses)    
+        throw new string ("Esperado '(' apÃ³s 'if'.");
+    
+    while (true)
+    {
+        compilaExpressaoLogica();
+        prox = analex.proximoPedaco(true);
+        if (prox == e || prox == ou)
+            continue;
+        else
+        {
+            prox = analex.proximoPedaco(true);
+            if (prox != fechaParenteses)
+                throw new string ("Esperado ')' no fim da condiÃ§Ã£o.");
+            else
+                break;
+        }
+    }
 }
 
 void AnalisadorSintatico::compilaEnquanto();
@@ -174,6 +196,16 @@ void AnalisadorSintatico::compilaFatorRelacional();
 
 void AnalisadorSintatico::compilaExpressaoLogica();
 {
+    TipoPedaco prox = analex.proximoPedaco(true);
 
+    if (!(prox == identificador || prox == numero))
+        throw new string ("Esperado identificador ou valor");
+    
+    prox = analex.proximoPedaco(true);
+    if (!(prox == igual || prox == menor || prox == menorIgual || prox == maior || prox == maiorIgual || prox == diferente))
+        throw new string("Esperado comparador");
+    
+    prox = analex.proximoPedaco(true);
+    if (!(prox == identificador || prox == numero))
+        throw new string ("Esperado identificador ou valor");
 }
-
