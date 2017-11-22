@@ -13,7 +13,9 @@ class TabelaDeSimbolos
 	public:
 		TabelaDeSimbolos();
 		void guarde (Simbolo);
-		void elimine ();
+		void elimineNivel ();
+		void adicioneNivel ();
+		bool existeSimbolo (Simbolo, int);
 };
 	// estrutura armazenando simbolos;
   // metodo guarde();
