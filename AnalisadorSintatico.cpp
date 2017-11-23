@@ -311,12 +311,18 @@ void AnalisadorSintatico::compilaExpressaoAritmetica();
 
 void AnalisadorSintatico::compilaTermo();
 {
-
+    compilaFator();
+    TipoPedaco prox = analex.proximoPedaco(false);
+    while(prox == vezes || prox == dividido || prox == resto)
+    {
+        prox = analex.proximoPedaco(true);
+        compilaFator();
+    }
 }
 
 void AnalisadorSintatico::compilaFator();
 {
-
+    
 }
 
 
