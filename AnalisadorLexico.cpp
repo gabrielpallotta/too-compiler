@@ -4,11 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-<<<<<<< HEAD
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":"};
-=======
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or"};
->>>>>>> 6f83df246beba5915a3e422a9cde792caa59c1fe
+const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or"};
 
 const int nPalavras   = 16;
 const int nOperadores = 10;
