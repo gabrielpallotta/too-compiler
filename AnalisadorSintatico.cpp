@@ -340,8 +340,8 @@ void AnalisadorSintatico::compilaExpressaoLogica();
 {
     TipoPedaco prox = analex.proximoPedaco(true);
 
-    if (!(prox == identificador || prox == numero))
-        throw new string ("Esperado identificador ou valor");
+    if (!(prox == identificador || prox == numero))             //verificar a validade dos identificadores os valores
+        throw new string ("Esperado identificador ou valor");    
     
     prox = analex.proximoPedaco(true);
     if (!(prox == igual || prox == menor || prox == menorIgual || prox == maior || prox == maiorIgual || prox == diferente))
