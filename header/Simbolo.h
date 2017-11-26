@@ -58,6 +58,7 @@ class Procedimento: public Simbolo
 		Procedimento(char[256], int);
 		int getNumeroParametros();
 		void adicionarParametro(Parametro);
+		Parametro getParametro(string);
 };
 
 #endif

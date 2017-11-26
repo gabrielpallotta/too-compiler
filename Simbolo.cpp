@@ -58,3 +58,9 @@ void Procedimento::adicionarParametro (Parametro p)
 {
 	this->parametros.push_back(p);
 }
+
+void Procedimento::getParametro (string s)
+{
+	// retorna null se não achar parametro
+	// retorna parametro se achar
+}

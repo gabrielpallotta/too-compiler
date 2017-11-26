@@ -245,7 +245,23 @@ void AnalisadorSintatico::compilaProcedimento();
     if (prox != identificador)
         throw new string ("Esperado identificador na chamada de procedimento.");
     
-    if (tabela.)
+    Procedimento p = (Procedimento)tabela.getSimbolo(analex.getNome(), nivelAtual);
+    
+    if (p == null)
+        throw new string ("Identificador inesperado");
+
+    prox = analex.proximoPedaco(true);
+    if (prox != abreParenteses)
+        throw new string ("Esperado '(' apos chamada de procedimento");
+
+    prox = analex.proximoPedaco(true);
+    if (prox != fechaParenteses && prox != identificador)
+        throw new string ("Esperado ')' ou identificador na chamada de procedimento");
+        
+    while (prox == identificador)
+    {
+        if (p.getParametro(analex.getNome()) != null)
+    }
 }
 
 void AnalisadorSintatico::compilaFuncao();
@@ -262,7 +278,7 @@ void AnalisadorSintatico::compilaSe();
     
     prox = analex.proximoPedaco(true);
     if (prox != abreParenteses)    
-        throw new string ("Esperado '(' após 'if'.");
+        throw new string ("Esperado '(' apos 'if'.");
     
     while (true)
     {
@@ -274,7 +290,7 @@ void AnalisadorSintatico::compilaSe();
         {
             prox = analex.proximoPedaco(true);
             if (prox != fechaParenteses)
-                throw new string ("Esperado ')' no fim da condição.");
+                throw new string ("Esperado ')' no fim da condicao.");
             else
                 break;
         }
@@ -283,7 +299,29 @@ void AnalisadorSintatico::compilaSe();
 
 void AnalisadorSintatico::compilaEnquanto();
 {
-
+    TipoPedaco prox = analex.proximoPedaco(true);
+    if (prox != enquanto)
+        throw new string ("Esperado 'while'.");
+    
+    prox = analex.proximoPedaco(true);
+    if (prox != abreParenteses)    
+        throw new string ("Esperado '(' apos 'while'.");
+    
+    while (true)
+    {
+        compilaExpressaoLogica();
+        prox = analex.proximoPedaco(true);
+        if (prox == e || prox == ou)
+            continue;
+        else
+        {
+            prox = analex.proximoPedaco(true);
+            if (prox != fechaParenteses)
+                throw new string ("Esperado ')' no fim da condicao.");
+            else
+                break;
+        }
+    }
 }
 
 

@@ -23,7 +23,7 @@ void TabelaDeSimbolos::elimineNivel()
 	listaDeSimbolos.pop_back();
 }
 
-bool TabelaDeSimbolos::existeSimbolo(Simbolo s, int nivel)
+bool TabelaDeSimbolos::getSimbolo(string s, int nivel)
 {
 	return listaDeSimbolos[nivel].exists(s);
 }
