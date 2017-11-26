@@ -336,7 +336,34 @@ void AnalisadorSintatico::compilaEnquanto()
 
 void AnalisadorSintatico::compilaComando()
 {
-
+    TipoPedaco prox = analex.proximoPedaco(false);
+    if (prox != identifiador)
+    {
+      if (prox == enquanto)
+        compilaEnquanto();
+      else if (prox == se)
+        compilaSe();
+      else if (prox == inteiro || prox == boolean)
+        compilaDeclaracaoDeVariavel();
+      else if (prox == funcao)
+        compilaDeclaracaoDeFuncao();
+      else if (prox == procedimento)
+        compilaDeclaracaoDeProcedimento();
+      else
+        throw new string ("Comando desconhecido.");
+    }
+    else
+    {
+      Simbolo s = tabela->getSimbolo(analex->getNome(), nivelAtual);
+      if (s->tiposimb == simb_variavel || s->tiposimb == simb_parametro)
+        compilaAtribuicao();
+      else if (s->tiposimb == simb_funcao)
+        compilaFuncao();
+      else if (s->tiposimb == simb_procedimento)
+        compilaProcedimento();
+      else
+        throw new string ("Identificador inválido.")
+    }
 }
 
 void AnalisadorSintatico::compilaComandoComposto()

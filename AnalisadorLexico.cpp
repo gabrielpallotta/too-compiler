@@ -54,17 +54,32 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 	char* s = (char*)malloc(100*sizeof(char));
 	char  c = fgetc(arquivo);
 
+ 	if (c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '>' || c == '<')
+	{ //Se o primeiro caracter a ser lido for um desses, assume-se que a leitura é de uma expressão de variáveis coladas Ex.: a+b (não a + b)
+		s[0] = c;
+		c = fgetc(arquivo);
+
+		if ( c == '=' ) // então é comparador >=, <=, ou :=
+			s[1] = c;
+		else
+			ungetc(c, arquivo);
+
+		i = QualOTipo(s);
+		return static_cast<TipoPedaco>(i);
+	}
+
 	while (c == '\t' || c == ' ' || c == '\n')
 	{
 		c = fgetc(arquivo);
 	}
 
-	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == EOF || i >= 99))
+	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '>' || c == '<' || c == EOF || i >= 99))
 	{
 		s[i] = c;
 		c = fgetc(arquivo);
 		i++;
 	}
+	ungetc(c, arquivo);
 	s[i] = '\x0';
 
 	if (consuma)
