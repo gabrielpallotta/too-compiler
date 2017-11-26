@@ -15,7 +15,11 @@ class TabelaDeSimbolos
 		void guarde (Simbolo);
 		void elimineNivel ();
 		void adicioneNivel ();
+<<<<<<< HEAD
 		Simbolo getSimbolo (string, int);
+=======
+		Simbolo getSimbolo (string);
+>>>>>>> 05715ef5dc1de89dcb10ddd6bbaaf01399b81f25
 };
 	// estrutura armazenando simbolos;
   // metodo guarde();

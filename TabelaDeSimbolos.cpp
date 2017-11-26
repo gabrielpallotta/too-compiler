@@ -27,3 +27,8 @@ bool TabelaDeSimbolos::getSimbolo(string s, int nivel)
 {
 	return listaDeSimbolos[nivel].exists(s);
 }
+
+Simbolo TabelaDeSimbolos::getSimbolo(string s)
+{
+	//verificação linear da lista de símbolos para devolver o símbolo.
+}
