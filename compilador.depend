@@ -107,3 +107,24 @@
 	<vector>
 	<string>
 
+1511717646 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1511717646 e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\header\analisadorlexico.h
+	<stdio.h>
+
+1511717616 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\main.cpp
+	<iostream>
+
+1511717646 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1511717646 e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\header\simbolo.h
+	<vector>
+	<string>
+

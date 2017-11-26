@@ -24,7 +24,6 @@ typedef enum {
     maiorIgual,
     menor,
     menorIgual,
-    igualIgual,
 	igual,
 	resto,
     dividido,

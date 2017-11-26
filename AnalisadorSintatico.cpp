@@ -78,7 +78,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
             var = var_booleano;
 
         for (int i = 0; i < variaveis.size(); i++)
-            tabela->guarde(new Variavel(variaveis[i], nivelAtual, var));
+            tabela->guarde(new Variavel(variaveis[i], nivelAtual, var, simb_variavel));
 
         prox = analex->proximoPedaco(false);
     }
@@ -96,7 +96,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
     if (prox != identificador)
         throw new string ("Esperado nome do procedimento na declaracao.");
 
-    Procedimento* proc = new Procedimento(analex->getNome(), nivelAtual);
+    Procedimento* proc = new Procedimento(analex->getNome(), nivelAtual, simb_procedimento);
 
     prox = analex->proximoPedaco(true);
     if (prox != abreParenteses)
@@ -140,7 +140,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
             var = var_booleano;
 
         for (int i = 0; i < parametrosDeUmTipo.size(); i++)
-            proc->adicionarParametro(new Parametro(parametrosDeUmTipo[i], nivelAtual, var));
+            proc->adicionarParametro(new Parametro(parametrosDeUmTipo[i], nivelAtual, var, simb_parametro));
 
         prox = analex->proximoPedaco(true);
 
@@ -215,7 +215,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
 
         for (int i = 0; i < parametros.size(); i++)
         {
-            tabela->guarde(new Parametro(parametros[i], nivelAtual, par));
+            tabela->guarde(new Parametro(parametros[i], nivelAtual, par, simb_parametro));
         }
 
         prox = analex->proximoPedaco(false);
@@ -236,7 +236,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
     else
         ret = var_booleano;
 
-    Funcao* funcao = new Funcao(nomeFuncao, nivelAtual, ret);
+    Funcao* funcao = new Funcao(nomeFuncao, nivelAtual, ret, simb_funcao);
 
     // CONSERTAR ISSO AQUI EU NAO SEI O QUE FAZER
 
@@ -347,7 +347,32 @@ void AnalisadorSintatico::compilaComandoComposto()
 
 void AnalisadorSintatico::compilaAtribuicao()
 {
+    TipoPedaco prox = analex.proximoPedaco(true);
 
+    if (prox != identificador)
+        throw new string ("Esperado identificador.");
+
+    Simbolo s = tabela->getSimbolo(analex->getNome(), nivelAtual);
+        if (s->tiposimb != simb_variavel && s->tiposimb != simb_parametro)
+            throw new string ("Variavel/Parametro nao existe.");
+
+    if (s->tiposimb == simb_variavel)
+        Variavel simb = (Variavel)s;
+    else
+        Parametro simb = (Parametro)s;
+
+    prox = analex.proximoPedaco(true);
+    if (prox != doisPontos)
+        throw new string ("Esperado ':' antes de '=' em atribuicao.");
+
+    prox = analex.proximoPedaco(true);
+    if (prox != igual)
+        throw new string ("Esperado '=' depois de ':' em atribuicao.");
+
+    if(simb->tipo == var_inteiro)
+        compilaExpressaoAritmetica();
+    else
+        compilaExpressaoLogica();
 }
 
 
@@ -369,7 +394,48 @@ void AnalisadorSintatico::compilaTermo()
 
 void AnalisadorSintatico::compilaFator()
 {
+    TipoPedaco prox = analex->proximoPedaco(true);
 
+    if (prox == menos)
+        prox = analex.proximoPedaco(true);
+
+    if (prox == identificador)
+    {
+        Simbolo s = tabela->getSimbolo(analex->getNome(), nivelAtual);
+        if (s->tiposimb != simb_funcao)
+            throw new string ("Funcao nao existe.");
+
+        Funcao f = (Funcao)s;
+
+        if (f->getTipoDeRetorno() != var_inteiro)
+            throw new string ("Funcao nao retorna um inteiro.");
+
+        compilaDeclaracaoDeFuncao();
+    }
+    else
+    {
+        Simbolo s = tabela->getSimbolo(analex->getNome(), nivelAtual);
+        if (s->tiposimb != simb_variavel)
+            throw new string ("Variavel nao existe.");
+
+        Variavel v = (Variavel)s;
+
+        if (v->getTipo() != var_inteiro)
+                throw new string ("Variavel nao eh inteira.");
+    }
+    else
+    {
+        if (prox == abreParenteses)
+        {
+            compilaExpressaoAritmetica();
+            prox = analex.proximoPedaco(true);
+            if (prox != fechaParenteses)
+                throw new string ("Esperado ')' ao final de uma expressao aritmetica.");
+        }
+        else
+            if (prox != numero)
+                throw new string ("Esperado numero.");
+    }
 }
 
 
@@ -396,11 +462,19 @@ void AnalisadorSintatico::compilaExpressaoLogica()
     if (!(prox == identificador || prox == numero))             //verificar a validade dos identificadores os valores
         throw new string ("Esperado identificador ou valor");
 
+    if (prox == identificador)
+        if (tabela->getSimbolo(analex->getNome(), nivelAtual) == nullptr)
+            throw new string ("Identificador nao existe");
+
     prox = analex->proximoPedaco(true);
     if (!(prox == igual || prox == menor || prox == menorIgual || prox == maior || prox == maiorIgual || prox == diferente))
-        throw new string("Esperado comparador");
+        throw new string ("Esperado comparador");
 
     prox = analex->proximoPedaco(true);
     if (!(prox == identificador || prox == numero))
         throw new string ("Esperado identificador ou valor");
+
+    if (prox == identificador)
+        if (tabela->getSimbolo(analex->getNome(), nivelAtual) == nullptr)
+            throw new string ("Identificador nao existe");
 }

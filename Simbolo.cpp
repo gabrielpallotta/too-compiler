@@ -6,16 +6,17 @@ using namespace std;
 Simbolo::Simbolo()
 {}
 
-Simbolo::Simbolo(char* nome, int nivel)
+Simbolo::Simbolo(char* nome, int nivel, TipoSimbolo tiposimb)
 {
     this->nome = nome;
     this->nivel = nivel;
+    this->tiposimb = tiposimb;
 }
 
 // Parametro
-Parametro::Parametro (char* nome, int nivel, TipoVar tipo)
+Parametro::Parametro (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb)
 {
-    Simbolo(nome, nivel);
+    Simbolo(nome, nivel, tiposimb);
 	this->tipo = tipo;
 }
 
@@ -25,9 +26,9 @@ TipoVar Parametro::getTipo ()
 }
 
 // Variavel
-Variavel::Variavel (char* nome, int nivel, TipoVar tipo)
+Variavel::Variavel (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb)
 {
-    Simbolo(nome, nivel);
+    Simbolo(nome, nivel, tiposimb);
 	this->tipo = tipo;
 }
 
@@ -37,9 +38,9 @@ TipoVar Variavel::getTipo ()
 }
 
 // Funcao
-Funcao::Funcao (char* nome, int nivel, TipoVar tipoDeRetorno)
+Funcao::Funcao (char* nome, int nivel, TipoVar tipoDeRetorno, TipoSimbolo tiposimb)
 {
-    Simbolo(nome, nivel);
+    Simbolo(nome, nivel, tiposimb);
 	this->tipoDeRetorno = tipoDeRetorno;
 	this->parametros = vector<Parametro*>();
 }
@@ -60,9 +61,9 @@ void Funcao::adicionarParametro (Parametro* p)
 }
 
 //Procedimento
-Procedimento::Procedimento(char* nome, int nivel)
+Procedimento::Procedimento(char* nome, int nivel, TipoSimbolo tiposimb)
 {
-    Simbolo(nome, nivel);
+    Simbolo(nome, nivel, tiposimb);
 	this->parametros = vector<Parametro*>();
 }
 
