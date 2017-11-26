@@ -38,6 +38,7 @@ typedef enum {
 	abreParenteses,
 	fechaParenteses,
 	ou,
+	diferente,
 	desconhecido,
 	identificador,
 	numero,

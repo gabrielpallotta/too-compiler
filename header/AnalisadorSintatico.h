@@ -1,14 +1,17 @@
 #ifndef AnalisadorSintatico_H
 #define AnalisadorSintatico_H
 
+#include "AnalisadorLexico.h"
+#include "TabelaDeSimbolos.h"
 
 class AnalisadorSintatico
 {
 	private:
-		AnalisadorLexico analex;
-		TabelaDeSimbolos tabela;
+		AnalisadorLexico* analex;
+		TabelaDeSimbolos* tabela;
 		int nivelAtual;
 	public:
+	    AnalisadorSintatico(char*);
 		void compilaInicioDePrograma();
 	    void compilaProgramaPrincipal();
 	    void compilaDeclaracaoDeVariavel();
@@ -35,6 +38,6 @@ class AnalisadorSintatico
 	    void compilaFatorRelacional();
 
 	    void compilaExpressaoLogica();
-}
+};
 
 #endif

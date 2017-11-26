@@ -3,9 +3,19 @@
 
 using namespace std;
 
-// Parametro
-Parametro::Parametro (TipoVar tipo)
+Simbolo::Simbolo()
+{}
+
+Simbolo::Simbolo(char* nome, int nivel)
 {
+    this->nome = nome;
+    this->nivel = nivel;
+}
+
+// Parametro
+Parametro::Parametro (char* nome, int nivel, TipoVar tipo)
+{
+    Simbolo(nome, nivel);
 	this->tipo = tipo;
 }
 
@@ -15,8 +25,9 @@ TipoVar Parametro::getTipo ()
 }
 
 // Variavel
-Variavel::Variavel (TipoVar tipo)
+Variavel::Variavel (char* nome, int nivel, TipoVar tipo)
 {
+    Simbolo(nome, nivel);
 	this->tipo = tipo;
 }
 
@@ -26,10 +37,11 @@ TipoVar Variavel::getTipo ()
 }
 
 // Funcao
-Funcao::Funcao (TipoVar tipoDeRetorno)
+Funcao::Funcao (char* nome, int nivel, TipoVar tipoDeRetorno)
 {
+    Simbolo(nome, nivel);
 	this->tipoDeRetorno = tipoDeRetorno;
-	this->parametros = vector<Parametro>();
+	this->parametros = vector<Parametro*>();
 }
 
 TipoVar Funcao::getTipoDeRetorno ()
@@ -42,24 +54,29 @@ int Funcao::getNumeroParametros ()
 	return this->parametros.size();
 }
 
-void Funcao::adicionarParametro (Parametro p)
+void Funcao::adicionarParametro (Parametro* p)
 {
 	this->parametros.push_back(p);
 }
 
 //Procedimento
+Procedimento::Procedimento(char* nome, int nivel)
+{
+    Simbolo(nome, nivel);
+	this->parametros = vector<Parametro*>();
+}
+
 int Procedimento::getNumeroParametros ()
 {
 	return this->parametros.size();
-	this->parametros = vector<Parametro>();
 }
 
-void Procedimento::adicionarParametro (Parametro p)
+void Procedimento::adicionarParametro (Parametro* p)
 {
 	this->parametros.push_back(p);
 }
 
-void Procedimento::getParametro (string s)
+Parametro Procedimento::getParametro (string s)
 {
 	// retorna null se não achar parametro
 	// retorna parametro se achar

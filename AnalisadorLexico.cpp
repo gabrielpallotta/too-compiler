@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or"};
+const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or", "<>"};
 
 const int nPalavras   = 16;
 const int nOperadores = 10;
@@ -45,7 +45,7 @@ int QualOTipo(char* palavra) //busca sequencial pelos operadores e palavras
     return -1;
 }
 
-TipoPedaco  AnalisadorLexico::proximoPedaco(bool consuma)
+TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 {
 	if (!temMaisPedacos())
 		return (TipoPedaco)fimDeArquivo;
@@ -71,7 +71,7 @@ TipoPedaco  AnalisadorLexico::proximoPedaco(bool consuma)
 	{
 		int size = strlen(s);
 		for (int i = 1; i <= size; i++)
-			ungetc(arquivo, s[size - i]);
+			ungetc(s[size - i], arquivo);
 	}
 
 	i = QualOTipo(s);

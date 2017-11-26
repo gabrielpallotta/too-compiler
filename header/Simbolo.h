@@ -2,6 +2,7 @@
 #define Simbolo_H
 
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -13,11 +14,11 @@ typedef enum
 
 class Simbolo
 {
-	private:
-		char nome [256];
-		unsigned char nivel;
 	public:
-		Simbolo(char[256], int);
+		char* nome;
+		unsigned char nivel;
+		Simbolo(char*, int);
+		Simbolo();
 };
 
 class Parametro: public Simbolo
@@ -43,21 +44,22 @@ class Funcao: public Simbolo
 {
 	private:
 		TipoVar tipoDeRetorno;
-		vector<Parametro> parametros;
+		vector<Parametro*> parametros;
 	public:
 		Funcao(char[256], int, TipoVar);
 		int getNumeroParametros();
+		void adicionarParametro(Parametro*);
 		TipoVar getTipoDeRetorno();
 };
 
 class Procedimento: public Simbolo
 {
 	private:
-		vector<Parametro> parametros;
+		vector<Parametro*> parametros;
 	public:
-		Procedimento(char[256], int);
+		Procedimento(char*, int);
 		int getNumeroParametros();
-		void adicionarParametro(Parametro);
+		void adicionarParametro(Parametro*);
 		Parametro getParametro(string);
 };
 
