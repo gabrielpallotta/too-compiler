@@ -253,29 +253,66 @@ void AnalisadorSintatico::compilaProcedimento()
     if (prox != identificador)
         throw new string ("Esperado identificador na chamada de procedimento.");
 
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    //Procedimento* p = (Procedimento)tabela->getSimbolo(analex->getNome(), nivelAtual);
+    Procedimento* proc = (Procedimento)tabela->getSimbolo(analex->getNome(), nivelAtual);
 
-    //if (p == null)
+    if (proc == null)
         throw new string ("Identificador inesperado");
 
     prox = analex->proximoPedaco(true);
     if (prox != abreParenteses)
         throw new string ("Esperado '(' apos chamada de procedimento");
 
+    while (prox == identificador)
+    {
+        Parametro param = proc.getParametro(analex.getNome());
+        if (param == null || tabela.getSimbolo(analex.getNome()).tipoSimbolo != param.tipoSimbolo)
+            throw new string ("Parametro invalido na chamada de procedimento");
+
+        prox = analex->proximoPedaco(true);
+        if (prox != virgula)
+            throw new string ("Esperado ',' para separarar parametros na chamada de procedimento.");
+        
+        prox = analex->proximoPedaco(true);
+    }
+
     prox = analex->proximoPedaco(true);
     if (prox != fechaParenteses && prox != identificador)
         throw new string ("Esperado ')' ou identificador na chamada de procedimento");
 
-    //while (prox == identificador)
-    //{
-    //    if (p.getParametro(analex.getNome()) != null)
-    //}
+    
 }
 
 void AnalisadorSintatico::compilaFuncao()
 {
+    TipoPedaco prox = analex->proximoPedaco(true);
+    if (prox != identificador)
+        throw new string ("Esperado identificador na chamada de funcao.");
 
+    Funcao* func = (Funcao)tabela->getSimbolo(analex->getNome(), nivelAtual);
+
+    if (func == null)
+        throw new string ("Identificador inesperado");
+
+    prox = analex->proximoPedaco(true);
+    if (prox != abreParenteses)
+        throw new string ("Esperado '(' apos chamada de funcao");
+
+    while (prox == identificador)
+    {
+        Parametro param = func.getParametro(analex.getNome());
+        if (param == null || tabela.getSimbolo(analex.getNome()).tipoSimbolo != param.tipoSimbolo)
+            throw new string ("Parametro invalido na chamada de funcao");
+
+        prox = analex->proximoPedaco(true);
+        if (prox != virgula)
+            throw new string ("Esperado ',' para separarar parametros na chamada de funcao.");
+        
+        prox = analex->proximoPedaco(true);
+    }
+
+    prox = analex->proximoPedaco(true);
+    if (prox != fechaParenteses && prox != identificador)
+        throw new string ("Esperado ')' ou identificador na chamada de funcao");
 }
 
 
@@ -368,7 +405,20 @@ void AnalisadorSintatico::compilaComando()
 
 void AnalisadorSintatico::compilaComandoComposto()
 {
+    prox = analex->proximoPedaco(true);
+    if (prox != inicio)
+        throw new string ("Esperado 'begin' no inicio de comando composto.");
 
+    prox = analex->proximeoPedaco(true);
+
+    while (prox != fim && analex->temMaisPedacos())
+    {
+        compilaComando();
+        prox = analex->proximoPedaco(true);
+    }
+
+    if (!analex->temMaisPedacos())
+        throw new string ("Esperado 'end' no final de comando composto.");
 }
 
 
