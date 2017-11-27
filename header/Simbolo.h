@@ -58,6 +58,7 @@ class Funcao: public Simbolo
 		Funcao(char[256], int, TipoVar, TipoSimbolo);
 		int getNumeroParametros();
 		void adicionarParametro(Parametro*);
+		Parametro* getParametro(string);
 		TipoVar getTipoDeRetorno();
 };
 
@@ -69,7 +70,7 @@ class Procedimento: public Simbolo
 		Procedimento(char*, int, TipoSimbolo);
 		int getNumeroParametros();
 		void adicionarParametro(Parametro*);
-		Parametro getParametro(string);
+		Parametro* getParametro(string);
 };
 
 #endif

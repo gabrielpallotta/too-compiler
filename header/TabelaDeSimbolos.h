@@ -9,13 +9,13 @@ using namespace std;
 class TabelaDeSimbolos
 {
 	private:
-		vector<vector<Simbolo> > listaDeSimbolos;
+		vector<vector<Simbolo*> > listaDeSimbolos;
 	public:
 		TabelaDeSimbolos();
-		void guarde (Simbolo);
+		void guarde (Simbolo*);
 		void elimineNivel ();
 		void adicioneNivel ();
-		Simbolo getSimbolo (string, int);
+		Simbolo* getSimbolo (char*, int);
 };
 	// estrutura armazenando simbolos;
   // metodo guarde();

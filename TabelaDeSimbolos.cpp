@@ -1,5 +1,6 @@
 #include "header/TabelaDeSimbolos.h"
 #include <vector>
+#include <string.h>
 #include <string>
 
 using namespace std;
@@ -24,12 +25,12 @@ void TabelaDeSimbolos::elimineNivel()
 	listaDeSimbolos.pop_back();
 }
 
-Simbolo TabelaDeSimbolos::getSimbolo(string s, int nivel)
+Simbolo* TabelaDeSimbolos::getSimbolo(char* s, int nivel)
 {
     int i = 0;
 	while (i < listaDeSimbolos.size())
-        if (strcmp(listaDeSimbolos[nivel][i], s) == 0)
-            return listaDeSimbolos[nivel][i]];
+        if (strcmp(listaDeSimbolos[nivel][i]->nome, s) == 0)
+            return listaDeSimbolos[nivel][i];
 
-    return nullptr;
+    return 0;
 }
