@@ -128,3 +128,20 @@
 	<vector>
 	<string>
 
+1511725278 source:f:\_too\too-compiler\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1511725278 f:\_too\too-compiler\header\simbolo.h
+	<vector>
+	<string>
+
+1511725278 source:f:\_too\too-compiler\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<vector>
+	<string>
+
+1511738044 f:\_too\too-compiler\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
