@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or", "<>"};
+const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "=", ":=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or", "<>"};
 
-const int nPalavras   = 16;
-const int nOperadores = 10;
+const int nPalavras   = 17;
+const int nOperadores = 18;
 
 AnalisadorLexico::AnalisadorLexico (char* nomeArq)
 {
@@ -54,15 +54,22 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 	char* s = (char*)malloc(100*sizeof(char));
 	char  c = fgetc(arquivo);
 
- 	if (c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '>' || c == '<')
+ 	if (c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<')
 	{ //Se o primeiro caracter a ser lido for um desses, assume-se que a leitura é de uma expressão de variáveis coladas Ex.: a+b (não a + b)
 		s[0] = c;
 		c = fgetc(arquivo);
 
 		if ( c == '=' ) // então é comparador >=, <=, ou :=
-			s[1] = c;
+		{
+            s[1] = c;
+            s[2] = '\x0';
+		}
 		else
-			ungetc(c, arquivo);
+        {
+            s[1] = '\x0';
+            ungetc(c, arquivo);
+        }
+
 
 		i = QualOTipo(s);
 		return static_cast<TipoPedaco>(i);
@@ -73,7 +80,7 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 		c = fgetc(arquivo);
 	}
 
-	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '>' || c == '<' || c == EOF || i >= 99))
+	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<' || c == EOF || i >= 99))
 	{
 		s[i] = c;
 		c = fgetc(arquivo);
@@ -82,7 +89,7 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 	ungetc(c, arquivo);
 	s[i] = '\x0';
 
-	if (consuma)
+	if (!consuma)
 	{
 		int size = strlen(s);
 		for (int i = 1; i <= size; i++)
@@ -105,10 +112,10 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 			for(;i<strlen(s);i++)
 				if (!isdigit(s[i]))
 				{
-						return (TipoPedaco)desconhecido;
+                    return (TipoPedaco)desconhecido;
 				}
-					ultimoValor = atoi(s);
-					return (TipoPedaco)numero;
+                ultimoValor = atoi(s);
+                return (TipoPedaco)numero;
 		}
 		else
 		{
