@@ -99,9 +99,9 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
         else
             var = var_booleano;
 
-        cout << variaveis.size();
         for (int i = 0; i < variaveis.size(); i++)
         {
+            vector<Simbolo*> simbolos = tabela->getSimbolos(variaveis[i]);
             tabela->guarde(new Variavel(variaveis[i], tabela->nivelAtual, var, simb_variavel));
         }
 
@@ -112,8 +112,6 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
 
 void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
 {
-    tabela->adicioneNivel();
-
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != procedimento)
         throw runtime_error ("Esperado 'procedure' na declaracao de procedimento.");
@@ -122,7 +120,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
     if (prox != identificador)
         throw runtime_error ("Esperado nome do procedimento na declaracao.");
 
-    Procedimento* proc = new Procedimento(analex->getNome(), tabela->nivelAtual, simb_procedimento);
+    Metodo* proc = new Metodo(analex->getNome(), tabela->nivelAtual, var_void, simb_procedimento);
 
     prox = analex->proximoPedaco(true);
     if (prox != abreParenteses)
@@ -166,7 +164,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
             var = var_booleano;
 
         for (int i = 0; i < parametrosDeUmTipo.size(); i++)
-            proc->adicionarParametro(new Parametro(parametrosDeUmTipo[i], tabela->nivelAtual, var, simb_parametro));
+            proc->adicionarParametro(new Variavel(parametrosDeUmTipo[i], tabela->nivelAtual, var, simb_parametro));
 
         prox = analex->proximoPedaco(true);
 
@@ -179,6 +177,8 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
     tabela->guarde(proc);
 
     prox = analex->proximoPedaco(false);
+
+    tabela->adicioneNivel();
 
     while (prox != comeco)
     {
@@ -199,8 +199,6 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
 
 void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
 {
-    tabela->adicioneNivel();
-
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != funcao)
         throw runtime_error ("Esperado 'function' na declaracao de funcao.");
@@ -218,14 +216,16 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
     prox = analex->proximoPedaco(true);
 
     vector<char*> nomeParametros;
-    vector<Parametro*> parametros;
+    vector<Variavel*> parametros;
+
+    nomeParametros = vector<char*>();
+    parametros = vector<Variavel*>();
 
     while (prox == identificador || prox == variavel && prox != fechaParenteses)
     {
         if (prox == variavel)
         prox = analex->proximoPedaco(true);
 
-        parametros = vector<char*>();
 
         prox = analex->proximoPedaco(true);
 
@@ -244,7 +244,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
                 throw runtime_error ("Esperado identificador apos virgula na declaracao de funcao.");
 
             // Guarda no vetor de par?metros o par?metro atual
-            parametros.push_back(analex->getNome());
+            nomeParametros.push_back(analex->getNome());
 
             prox = analex->proximoPedaco(false);
         }
@@ -260,9 +260,9 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
         else
             par = var_booleano;
 
-        for (int i = 0; i < parametros.size(); i++)
+        for (int i = 0; i < nomeParametros.size(); i++)
         {
-            Parametro* p = new Parametro(parametros[i], tabela->nivelAtual, par, simb_parametro);
+            Variavel* p = new Variavel(nomeParametros[i], tabela->nivelAtual, par, simb_parametro);
             tabela->guarde(p);
             parametros.push_back(p);
         }
@@ -285,13 +285,33 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
     else
         ret = var_booleano;
 
-    Funcao* funcao = new Funcao(nomeFuncao, tabela->nivelAtual, ret, simb_funcao);
-    // CONSERTAR ISSO AQUI EU NAO SEI O QUE FAZER
+    Metodo* func = new Metodo(nomeFuncao, tabela->nivelAtual, ret, simb_funcao);
 
     for (int i = 0; i < parametros.size(); i++)
-        funcao->adicionarParametro(parametros[i]);
+        func->adicionarParametro(parametros[i]);
 
-    tabela->guarde(funcao);
+    tabela->guarde(func);
+
+
+    tabela->adicioneNivel();
+
+    prox = analex->proximoPedaco(false);
+
+    while (prox != comeco)
+    {
+        if (prox == variavel)
+            compilaDeclaracaoDeVariavel();
+        else if (prox == procedimento)
+            compilaDeclaracaoDeProcedimento();
+        else if (prox == funcao)
+            compilaDeclaracaoDeFuncao();
+
+        prox = analex->proximoPedaco(false);
+    }
+
+    compilaComandoComposto();
+
+    tabela->elimineNivel();
 }
 
 
@@ -301,7 +321,7 @@ void AnalisadorSintatico::compilaProcedimento()
     if (prox != identificador)
         throw runtime_error ("Esperado identificador na chamada de procedimento.");
 
-    Procedimento* proc = (Procedimento*)tabela->getSimbolo(analex->getNome());
+    Metodo* proc = (Metodo*)tabela->getSimbolo(analex->getNome());
 
     if (proc == 0)
         throw runtime_error ("Identificador inesperado");
@@ -312,7 +332,7 @@ void AnalisadorSintatico::compilaProcedimento()
 
     while (prox == identificador)
     {
-        Parametro* param = proc->getParametro(analex->getNome());
+        Variavel* param = proc->getParametro(analex->getNome());
         if (param == 0 || tabela->getSimbolo(analex->getNome())->tiposimb != param->tiposimb)
             throw runtime_error ("Parametro invalido na chamada de procedimento");
 
@@ -336,7 +356,7 @@ void AnalisadorSintatico::compilaFuncao()
     if (prox != identificador)
         throw runtime_error ("Esperado identificador na chamada de funcao.");
 
-    Funcao* func = (Funcao*)tabela->getSimbolo(analex->getNome());
+    Metodo* func = (Metodo*)tabela->getSimbolo(analex->getNome());
 
     if (func == 0)
         throw runtime_error ("Identificador inesperado");
@@ -347,7 +367,7 @@ void AnalisadorSintatico::compilaFuncao()
 
     while (prox == identificador)
     {
-        Parametro* param = func->getParametro(analex->getNome());
+        Variavel* param = func->getParametro(analex->getNome());
         if (param == 0 || tabela->getSimbolo(analex->getNome())->tiposimb != param->tiposimb)
             throw runtime_error ("Parametro invalido na chamada de funcao");
 
@@ -531,12 +551,12 @@ void AnalisadorSintatico::compilaAtribuicao()
 
     if (s->tiposimb == simb_variavel)
     {
-        if(((Variavel*)s)->getTipo() == var_inteiro)
+        if(((Variavel*)s)->tipo == var_inteiro)
             compilaExpressaoAritmetica();
         else
             compilaExpressaoLogica();
     }
-    else if(((Parametro*)s)->getTipo() == var_inteiro)
+    else if(((Variavel*)s)->tipo == var_inteiro)
         compilaExpressaoAritmetica();
     else
         compilaExpressaoLogica();
@@ -579,14 +599,14 @@ void AnalisadorSintatico::compilaFator()
 
         if (s->tiposimb == simb_funcao)
         {
-            Funcao* f = (Funcao*)s;
+            Metodo* f = (Metodo*)s;
 
-            if (f->getTipoDeRetorno() != var_inteiro)
+            if (f->tipo != var_inteiro)
                 throw runtime_error ("Funcao nao retorna um inteiro.");
 
             compilaFuncao();
         }
-        else if (!(s->tiposimb != simb_variavel) || ((Funcao*)s)->getTipoDeRetorno() != var_inteiro)
+        else if (!(s->tiposimb != simb_variavel) || ((Metodo*)s)->tipo != var_inteiro)
             throw runtime_error ("Funcao deve retornar inteiro no fator.");
         else
         {
@@ -596,7 +616,7 @@ void AnalisadorSintatico::compilaFator()
 
             Variavel* v = (Variavel*)s;
 
-            if (v->getTipo() != var_inteiro)
+            if (v->tipo != var_inteiro)
                 throw runtime_error ("Variavel nao eh inteira.");
         }
     }
@@ -646,9 +666,9 @@ void AnalisadorSintatico::compilaFatorRelacional()
     if(prox == identificador)
     {
         Simbolo* s = tabela->getSimbolo(analex->getNome());
-        if(s->tiposimb == simb_funcao && ((Funcao*)s)->getTipoDeRetorno() == var_booleano)
+        if(s->tiposimb == simb_funcao && ((Metodo*)s)->tipo == var_booleano)
             compilaFuncao();
-        else if(!(s->tiposimb == simb_variavel) || !(((Variavel*)s)->getTipo() == var_booleano))
+        else if(!(s->tiposimb == simb_variavel) || !(((Variavel*)s)->tipo == var_booleano))
             compilaExpressaoRelacional();
     }
     else if (prox == abreParenteses)
@@ -671,10 +691,10 @@ void AnalisadorSintatico::compilaExpressaoLogica()
         throw runtime_error ("Esperado identificador ou valor");
 
     if (prox == identificador)
-        if (tabela->getSimbolo(analex->getNome()) == nullptr)
+        if (tabela->getSimbolo(analex->getNome()) == NULL)
             throw runtime_error ("Identificador nao existe");
 
-    TipoVar tv = tabela->getSimbolo(analex->getNome())->TipoVar;
+    TipoVar tv = tabela->getSimbolo(analex->getNome())->tipo;
 
     if (prox == verdadeiro || prox == falso || tv == var_booleano)
     {
@@ -697,9 +717,9 @@ void AnalisadorSintatico::compilaExpressaoLogica()
         throw runtime_error ("Esperado identificador ou valor");
 
     if (prox == identificador)
-        if (tabela->getSimbolo(analex->getNome()) == nullptr)
+        if (tabela->getSimbolo(analex->getNome()) == NULL)
             throw runtime_error ("Identificador nao existe");
 
-    if (tv != tabela->getSimbolo(analex->getNome())->TipoVar)
+    if (tv != tabela->getSimbolo(analex->getNome())->tipo)
         throw runtime_error ("Tipos incompatíveis na comparação.");
 }

@@ -14,7 +14,7 @@ TabelaDeSimbolos::TabelaDeSimbolos()
 
 void TabelaDeSimbolos::guarde(Simbolo* s)
 {
-    cout << s->nome;
+    cout << s->nome << " - " << nivelAtual  << "\n";
 	listaDeSimbolos.back().push_back(s);
 }
 
@@ -39,3 +39,4 @@ Simbolo* TabelaDeSimbolos::getSimbolo(char* s)
 
     return 0;
 }
+

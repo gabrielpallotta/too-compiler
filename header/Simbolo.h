@@ -17,7 +17,8 @@ typedef enum
 typedef enum
 {
     var_inteiro,
-    var_booleano
+    var_booleano,
+    var_void
 } TipoVar;
 
 class Simbolo
@@ -26,51 +27,27 @@ class Simbolo
 		char* nome;
 		unsigned char nivel;
 		TipoSimbolo tiposimb;
-		Simbolo(char*, int, TipoSimbolo);
+		TipoVar tipo;
+		Simbolo(char*, int, TipoVar, TipoSimbolo);
 		Simbolo();
 };
 
-class Parametro: public Simbolo
-{
-	private:
-		TipoVar tipo;
-	public:
-		Parametro(char[256], int, TipoVar, TipoSimbolo);
-		TipoVar getTipo();
-};
-
-
 class Variavel: public Simbolo
 {
-	private:
-		TipoVar tipo;
 	public:
 		Variavel(char*, int, TipoVar, TipoSimbolo);
-		TipoVar getTipo();
 };
 
-class Funcao: public Simbolo
+class Metodo: public Simbolo
 {
 	private:
-		TipoVar tipoDeRetorno;
-		vector<Parametro*> parametros;
+		vector<Variavel*> parametros;
 	public:
-		Funcao(char[256], int, TipoVar, TipoSimbolo);
+		Metodo(char*, int, TipoVar, TipoSimbolo);
 		int getNumeroParametros();
-		void adicionarParametro(Parametro*);
-		Parametro* getParametro(string);
+		void adicionarParametro(Variavel*);
+		Variavel* getParametro(string);
 		TipoVar getTipoDeRetorno();
-};
-
-class Procedimento: public Simbolo
-{
-	private:
-		vector<Parametro*> parametros;
-	public:
-		Procedimento(char*, int, TipoSimbolo);
-		int getNumeroParametros();
-		void adicionarParametro(Parametro*);
-		Parametro* getParametro(string);
 };
 
 #endif

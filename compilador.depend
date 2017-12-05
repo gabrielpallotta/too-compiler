@@ -145,7 +145,7 @@
 	<stdio.h>
 	"header/Simbolo.h"
 
-1512470722 source:f:\compilador\analisadorsintatico.cpp
+1512473760 source:f:\compilador\analisadorsintatico.cpp
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
@@ -160,15 +160,15 @@
 	"header/Simbolo.h"
 	<vector>
 
-1511874652 f:\compilador\header\simbolo.h
+1512473660 f:\compilador\header\simbolo.h
 	<vector>
 	<string>
 
-1512394074 source:f:\compilador\simbolo.cpp
+1512473508 source:f:\compilador\simbolo.cpp
 	"header/Simbolo.h"
 	<vector>
 
-1512469730 source:f:\compilador\tabeladesimbolos.cpp
+1512473782 source:f:\compilador\tabeladesimbolos.cpp
 	"header/TabelaDeSimbolos.h"
 	<iostream>
 	<vector>
