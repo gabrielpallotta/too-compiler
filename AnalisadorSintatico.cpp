@@ -685,9 +685,9 @@ void AnalisadorSintatico::compilaFatorRelacional()
 
 void AnalisadorSintatico::compilaExpressaoLogica()
 {
-    TipoPedaco prox = analex->proximoPedaco(true);
+    TipoPedaco prox = analex->proximoPedaco(false);
 
-    if (!(prox == identificador || prox == numero))             //verificar a validade dos identificadores os valores
+    if (!(prox == identificador || prox == numero || prox == verdadeiro || prox == falso))
         throw runtime_error ("Esperado identificador ou valor");
 
     if (prox == identificador)
@@ -698,28 +698,19 @@ void AnalisadorSintatico::compilaExpressaoLogica()
 
     if (prox == verdadeiro || prox == falso || tv == var_booleano)
     {
+        prox = analex->proximoPedaco(true);
         prox = analex->proximoPedaco(false);
+
         if (prox == fechaParenteses)
             return;
-    }
-
-    prox = analex->proximoPedaco(true);
-    if (!(prox == igual || prox == menor || prox == menorIgual || prox == maior || prox == maiorIgual || prox == diferente))
-        throw runtime_error ("Esperado comparador");
-    else if (tv == var_booleano)
-    {
-        if (!(prox == igual || prox == diferente))
+        if (prox != igual && prox != diferente)
             throw runtime_error ("Comparação inesperada relativa de tipos booleanos");
+
+        prox = analex->proximoPedaco(true);
+        prox = analex->proximoPedaco(true);
+
+        if (prox == verdadeiro || prox == falso || tabela->getSimbolo(analex->getNome())->TipoVar == var_booleano)
     }
-
-    prox = analex->proximoPedaco(true);
-    if (!(prox == identificador || prox == numero))
-        throw runtime_error ("Esperado identificador ou valor");
-
-    if (prox == identificador)
-        if (tabela->getSimbolo(analex->getNome()) == NULL)
-            throw runtime_error ("Identificador nao existe");
-
-    if (tv != tabela->getSimbolo(analex->getNome())->tipo)
-        throw runtime_error ("Tipos incompatíveis na comparação.");
+    else
+        compilaExpressaoRelacional();
 }
