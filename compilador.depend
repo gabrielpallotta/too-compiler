@@ -128,44 +128,49 @@
 	<vector>
 	<string>
 
-1511780542 source:f:\compilador\main.cpp
+1512394476 source:f:\compilador\main.cpp
 	<iostream>
 	"header/AnalisadorSintatico.h"
+	<stdexcept>
 
-1511776050 source:f:\compilador\analisadorlexico.cpp
+1512468336 source:f:\compilador\analisadorlexico.cpp
 	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
 	<string.h>
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
 
-1511726794 f:\compilador\header\analisadorlexico.h
+1512468250 f:\compilador\header\analisadorlexico.h
 	<stdio.h>
+	"header/Simbolo.h"
 
-1511780698 source:f:\compilador\analisadorsintatico.cpp
+1512470722 source:f:\compilador\analisadorsintatico.cpp
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
 	<stdexcept>
+	<iostream>
 
-1511657682 f:\compilador\header\analisadorsintatico.h
+1512470146 f:\compilador\header\analisadorsintatico.h
 	"AnalisadorLexico.h"
 	"TabelaDeSimbolos.h"
 
-1511779942 f:\compilador\header\tabeladesimbolos.h
+1512469708 f:\compilador\header\tabeladesimbolos.h
 	"header/Simbolo.h"
 	<vector>
 
-1511778648 f:\compilador\header\simbolo.h
+1511874652 f:\compilador\header\simbolo.h
 	<vector>
 	<string>
 
-1511778718 source:f:\compilador\simbolo.cpp
+1512394074 source:f:\compilador\simbolo.cpp
 	"header/Simbolo.h"
 	<vector>
 
-1511780026 source:f:\compilador\tabeladesimbolos.cpp
+1512469730 source:f:\compilador\tabeladesimbolos.cpp
 	"header/TabelaDeSimbolos.h"
+	<iostream>
 	<vector>
 	<string.h>
 	<string>

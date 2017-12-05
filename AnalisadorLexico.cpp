@@ -1,4 +1,5 @@
 #include "header/AnalisadorLexico.h"
+#include "header/Simbolo.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,14 +55,14 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 	char* s = (char*)malloc(100*sizeof(char));
 	char  c = fgetc(arquivo);
 
- 	if (c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<')
+ 	if (c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<' || c == ',' || c == '.')
 	{ //Se o primeiro caracter a ser lido for um desses, assume-se que a leitura é de uma expressão de variáveis coladas Ex.: a+b (não a + b)
-		s[0] = c;
+		s[0] = tolower(c);
 		c = fgetc(arquivo);
 
 		if ( c == '=' ) // então é comparador >=, <=, ou :=
 		{
-            s[1] = c;
+            s[1] = tolower(c);
             s[2] = '\x0';
 		}
 		else
@@ -80,9 +81,9 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
 		c = fgetc(arquivo);
 	}
 
-	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<' || c == EOF || i >= 99))
+	while (!(c == '\t' || c == ' ' || c == '\n' || c == ';' || c == ':' || c == '+' || c == '-' || c == '*' || c == '/' || c == '{' || c == '}' || c == '(' || c == ')' || c == '>' || c == '<' || c == ',' || c == '.' || c == EOF || i >= 99))
 	{
-		s[i] = c;
+		s[i] = tolower(c);
 		c = fgetc(arquivo);
 		i++;
 	}

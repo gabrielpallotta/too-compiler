@@ -9,7 +9,6 @@ class AnalisadorSintatico
 	private:
 		AnalisadorLexico* analex;
 		TabelaDeSimbolos* tabela;
-		int nivelAtual;
 	public:
 	    AnalisadorSintatico(char*);
 		void compilaInicioDePrograma();

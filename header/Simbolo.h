@@ -45,7 +45,7 @@ class Variavel: public Simbolo
 	private:
 		TipoVar tipo;
 	public:
-		Variavel(char[256], int, TipoVar, TipoSimbolo);
+		Variavel(char*, int, TipoVar, TipoSimbolo);
 		TipoVar getTipo();
 };
 

@@ -5,10 +5,11 @@ using namespace std;
 
 int main()
 {
-    AnalisadorSintatico* anasint = new AnalisadorSintatico("programa.pas");
+    AnalisadorSintatico* anasint = new AnalisadorSintatico((char*)"test/Certo.pas");
     try
     {
         anasint->compilaInicioDePrograma();
+        cout << "Programa compilado com sucesso!!!!!";
     }
     catch (runtime_error& e)
     {

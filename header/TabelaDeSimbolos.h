@@ -11,11 +11,12 @@ class TabelaDeSimbolos
 	private:
 		vector<vector<Simbolo*> > listaDeSimbolos;
 	public:
+	    int nivelAtual;
 		TabelaDeSimbolos();
 		void guarde (Simbolo*);
 		void elimineNivel ();
 		void adicioneNivel ();
-		Simbolo* getSimbolo (char*, int);
+		Simbolo* getSimbolo (char*);
 };
 	// estrutura armazenando simbolos;
   // metodo guarde();

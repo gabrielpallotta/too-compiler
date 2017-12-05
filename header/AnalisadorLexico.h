@@ -2,6 +2,7 @@
 #define AnalisadorLexico_H
 
 #include <stdio.h>
+#include "header/Simbolo.h"
 
 typedef enum {
 	e,
@@ -13,6 +14,7 @@ typedef enum {
     funcao,
 	se,
 	inteiro,
+	resto,
 	nao,
     procedimento,
 	programa,
@@ -25,7 +27,7 @@ typedef enum {
     menor,
     menorIgual,
 	igual,
-	resto,
+	atribuicao,
     dividido,
     vezes,
     mais,
@@ -56,7 +58,6 @@ class AnalisadorLexico
 		int        temMaisPedacos();
 		char*      getNome();
 		int        getValor();
-
 	private:
 		FILE* arquivo;
 		char* ultimoIdentificador;

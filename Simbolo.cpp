@@ -14,9 +14,8 @@ Simbolo::Simbolo(char* nome, int nivel, TipoSimbolo tiposimb)
 }
 
 // Parametro
-Parametro::Parametro (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb)
+Parametro::Parametro (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tiposimb)
 {
-    Simbolo(nome, nivel, tiposimb);
 	this->tipo = tipo;
 }
 
@@ -26,9 +25,8 @@ TipoVar Parametro::getTipo ()
 }
 
 // Variavel
-Variavel::Variavel (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb)
+Variavel::Variavel (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tiposimb)
 {
-    Simbolo(nome, nivel, tiposimb);
 	this->tipo = tipo;
 }
 
@@ -38,9 +36,8 @@ TipoVar Variavel::getTipo ()
 }
 
 // Funcao
-Funcao::Funcao (char* nome, int nivel, TipoVar tipoDeRetorno, TipoSimbolo tiposimb)
+Funcao::Funcao (char* nome, int nivel, TipoVar tipoDeRetorno, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tiposimb)
 {
-    Simbolo(nome, nivel, tiposimb);
 	this->tipoDeRetorno = tipoDeRetorno;
 	this->parametros = vector<Parametro*>();
 }
@@ -67,9 +64,8 @@ Parametro* Funcao::getParametro (string s)
 }
 
 //Procedimento
-Procedimento::Procedimento(char* nome, int nivel, TipoSimbolo tiposimb)
+Procedimento::Procedimento(char* nome, int nivel, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tiposimb)
 {
-    Simbolo(nome, nivel, tiposimb);
 	this->parametros = vector<Parametro*>();
 }
 
