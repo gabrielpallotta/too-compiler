@@ -1,7 +1,7 @@
 Program Prog1;
     Var a, b: Integer;
 
-    Procedure Proc1 (b: Boolean);
+    Procedure Proc1 (b : Boolean);
         Var a, c: Boolean;
 
         Function Func1 (Var a: Integer): Integer;

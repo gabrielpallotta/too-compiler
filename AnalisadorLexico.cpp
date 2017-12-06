@@ -71,6 +71,12 @@ TipoPedaco AnalisadorLexico::proximoPedaco(bool consuma)
             ungetc(c, arquivo);
         }
 
+        if (!consuma)
+        {
+            int size = strlen(s);
+            for (int i = 1; i <= size; i++)
+                ungetc(s[size - i], arquivo);
+        }
 
 		i = QualOTipo(s);
 		return static_cast<TipoPedaco>(i);

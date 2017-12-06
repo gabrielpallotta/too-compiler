@@ -59,7 +59,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
 {
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != variavel)
-        throw runtime_error ("Esperado 'var' na declaracao de vari?vel.");
+        throw runtime_error ("Esperado 'var' na declaracao de variavel.");
 
     prox = analex->proximoPedaco(true);
     if (prox != identificador)
@@ -101,17 +101,30 @@ void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
 
         for (int i = 0; i < variaveis.size(); i++)
         {
-            vector<Simbolo*> simbolos = tabela->getSimbolos(variaveis[i]);
+            Simbolo* simb = tabela->getSimbolo(variaveis[i]);
+
+            if (simb != NULL && simb->nivel == tabela->nivelAtual)
+                throw runtime_error ("Redeclaracao de variavel ja declarada.");
+
             tabela->guarde(new Variavel(variaveis[i], tabela->nivelAtual, var, simb_variavel));
         }
 
 
         prox = analex->proximoPedaco(false);
     }
+    prox = analex->proximoPedaco(true);
+        if (prox != pontoVirgula)
+            throw runtime_error ("Esperado ';' na declaracao de programa.");
 }
 
 void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
 {
+    vector<char*> nomeParametros;
+    vector<Variavel*> parametros;
+
+    nomeParametros = vector<char*>();
+    parametros = vector<Variavel*>();
+
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != procedimento)
         throw runtime_error ("Esperado 'procedure' na declaracao de procedimento.");
@@ -126,35 +139,42 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
     if (prox != abreParenteses)
         throw runtime_error ("Esperado '(' na declaracao de procedimento.");
 
+    blocoDeVariaveis:
+
     prox = analex->proximoPedaco(true);
+
+    if (prox == variavel)
+        prox = analex->proximoPedaco(true);
 
     if (prox != identificador && prox != fechaParenteses)
         throw runtime_error ("Esperado parametro ou ')' na declaracao de procedimento.");
 
     while (prox == identificador)
     {
-        vector<char*> parametrosDeUmTipo = vector<char*>();
-		parametrosDeUmTipo.push_back(analex->getNome());
+		nomeParametros.push_back(analex->getNome());
 
         prox = analex->proximoPedaco(true);
-
         while (prox != doisPontos)
         {
-            prox = analex->proximoPedaco(true);
             if (prox != virgula)
                 throw runtime_error ("Esperado ',' para separar parametro.");
 
             prox = analex->proximoPedaco(true);
-            if (prox != identificador)
-                throw runtime_error ("Esperado parametro na declaracao de proceimento.");
 
-            // Guarda no vetor de vari?veis a vari?vel atual
-            parametrosDeUmTipo.push_back(analex->getNome());
+            if (prox == variavel)
+                prox = analex->proximoPedaco(true);
+
+            if (prox != identificador)
+                throw runtime_error ("Esperado parametro na declaracao de procedimento.");
+
+            nomeParametros.push_back(analex->getNome());
+
+            prox = analex->proximoPedaco(true);
         }
 
         prox = analex->proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-                throw runtime_error ("Esperado tipo de variavel (inteiro ou booleano) apos sua declaracao.");
+            throw runtime_error ("Esperado tipo de variavel (inteiro ou booleano) apos sua declaracao.");
 
         TipoVar var;
 
@@ -163,22 +183,44 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
         else
             var = var_booleano;
 
-        for (int i = 0; i < parametrosDeUmTipo.size(); i++)
-            proc->adicionarParametro(new Variavel(parametrosDeUmTipo[i], tabela->nivelAtual, var, simb_parametro));
+        for (int i = 0; i < nomeParametros.size(); i++)
+            parametros.push_back(new Variavel(nomeParametros[i], tabela->nivelAtual, var, simb_parametro));
 
         prox = analex->proximoPedaco(true);
+
+        if (prox == pontoVirgula)
+            goto blocoDeVariaveis;
 
         if (prox != virgula && prox != fechaParenteses)
             throw runtime_error ("Esperado ',' ou ')' na declaracao de procedimento.");
 
         prox = analex->proximoPedaco(true);
+
+        if (prox == variavel)
+            prox = analex->proximoPedaco(true);
+
+        if (prox != identificador && prox != pontoVirgula)
+            throw runtime_error ("Esperado identificador ou ';' na declaracao de procedimento.");
     }
 
+    for (int i = 0; i < parametros.size(); i++)
+        proc->adicionarParametro(parametros[i]);
+
     tabela->guarde(proc);
+    tabela->adicioneNivel();
+
+    for (int i = 0; i < parametros.size(); i++)
+    {
+        Simbolo* simb = tabela->getSimbolo(nomeParametros[i]);
+
+        if (simb != NULL && simb->nivel == tabela->nivelAtual)
+            throw runtime_error ("Parametro com mesmo nome de variavel ja declarada.");
+
+        tabela->guarde(parametros[i]);
+    }
+
 
     prox = analex->proximoPedaco(false);
-
-    tabela->adicioneNivel();
 
     while (prox != comeco)
     {
@@ -199,13 +241,19 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
 
 void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
 {
+    vector<char*> nomeParametros;
+    vector<Variavel*> parametros;
+
+    nomeParametros = vector<char*>();
+    parametros = vector<Variavel*>();
+
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != funcao)
         throw runtime_error ("Esperado 'function' na declaracao de funcao.");
 
     prox = analex->proximoPedaco(true);
     if (prox != identificador)
-        throw runtime_error ("Esperado identificador na declaracao de funcao.");
+        throw runtime_error ("Esperado nome do funcao na declaracao.");
 
     char* nomeFuncao = analex->getNome();
 
@@ -215,64 +263,62 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
 
     prox = analex->proximoPedaco(true);
 
-    vector<char*> nomeParametros;
-    vector<Variavel*> parametros;
+    if (prox == variavel)
+        prox = analex->proximoPedaco(true);
 
-    nomeParametros = vector<char*>();
-    parametros = vector<Variavel*>();
+    if (prox != identificador && prox != fechaParenteses)
+        throw runtime_error ("Esperado parametro ou ')' na declaracao de funcao.");
 
-    while (prox == identificador || prox == variavel && prox != fechaParenteses)
+    while (prox == identificador)
     {
-        if (prox == variavel)
-        prox = analex->proximoPedaco(true);
-
+		nomeParametros.push_back(analex->getNome());
 
         prox = analex->proximoPedaco(true);
-
-
         while (prox != doisPontos)
         {
-            prox = analex->proximoPedaco(true);
-            if (prox != abreParenteses)
-
-            prox = analex->proximoPedaco(true);
             if (prox != virgula)
-                throw runtime_error ("Esperado ',' apos declaracao de parametro na declaracao de funcao.");
+                throw runtime_error ("Esperado ',' para separar parametro.");
 
             prox = analex->proximoPedaco(true);
-            if (prox != identificador)
-                throw runtime_error ("Esperado identificador apos virgula na declaracao de funcao.");
 
-            // Guarda no vetor de par?metros o par?metro atual
+            if (prox == variavel)
+                prox = analex->proximoPedaco(true);
+
+            if (prox != identificador)
+                throw runtime_error ("Esperado parametro na declaracao de procedimento.");
+
             nomeParametros.push_back(analex->getNome());
 
-            prox = analex->proximoPedaco(false);
+            prox = analex->proximoPedaco(true);
         }
 
         prox = analex->proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-            throw runtime_error ("Esperado tipo de parametro (inteiro ou booleano) apos sua declaracao.");
+            throw runtime_error ("Esperado tipo de retorno (inteiro ou booleano) da funcao");
 
-        TipoVar par;
+        TipoVar var;
 
         if (prox == inteiro)
-            par = var_inteiro;
+            var = var_inteiro;
         else
-            par = var_booleano;
+            var = var_booleano;
 
         for (int i = 0; i < nomeParametros.size(); i++)
-        {
-            Variavel* p = new Variavel(nomeParametros[i], tabela->nivelAtual, par, simb_parametro);
-            tabela->guarde(p);
-            parametros.push_back(p);
-        }
+            parametros.push_back(new Variavel(nomeParametros[i], tabela->nivelAtual, var, simb_parametro));
 
-        prox = analex->proximoPedaco(false);
+        prox = analex->proximoPedaco(true);
+
+        if (prox != pontoVirgula && prox != fechaParenteses)
+            throw runtime_error ("Esperado ';' ou ')' na declaracao de procedimento.");
+
+        prox = analex->proximoPedaco(true);
+
+        if (prox == variavel)
+            prox = analex->proximoPedaco(true);
+
+        if (prox != identificador && prox != doisPontos)
+            throw runtime_error ("Esperado identificador ou ':' na declaracao de procedimento");
     }
-
-    prox = analex->proximoPedaco(true);
-    if (prox != doisPontos)
-        throw runtime_error ("Esperado ':' apos declaracao de parametros.");
 
     prox = analex->proximoPedaco(true);
     if (prox != inteiro && prox != booleano)
@@ -291,9 +337,17 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
         func->adicionarParametro(parametros[i]);
 
     tabela->guarde(func);
-
-
     tabela->adicioneNivel();
+
+    for (int i = 0; i < parametros.size(); i++)
+    {
+        Simbolo* simb = tabela->getSimbolo(nomeParametros[i]);
+
+        if (simb != NULL && simb->nivel == tabela->nivelAtual)
+            throw runtime_error ("Parametro com mesmo nome de variavel ja declarada.");
+
+        tabela->guarde(parametros[i]);
+    }
 
     prox = analex->proximoPedaco(false);
 
@@ -347,7 +401,9 @@ void AnalisadorSintatico::compilaProcedimento()
     if (prox != fechaParenteses && prox != identificador)
         throw runtime_error ("Esperado ')' ou identificador na chamada de procedimento");
 
-
+    prox = analex->proximoPedaco(true);
+    if (prox != pontoVirgula)
+        throw runtime_error ("Esperado ';' na declaracao de programa.");
 }
 
 void AnalisadorSintatico::compilaFuncao()
@@ -381,6 +437,10 @@ void AnalisadorSintatico::compilaFuncao()
     prox = analex->proximoPedaco(true);
     if (prox != fechaParenteses && prox != identificador)
         throw runtime_error ("Esperado ')' ou identificador na chamada de funcao");
+
+    prox = analex->proximoPedaco(true);
+    if (prox != pontoVirgula)
+        throw runtime_error ("Esperado ';' na declaracao de programa.");
 }
 
 
@@ -525,6 +585,10 @@ void AnalisadorSintatico::compilaComandoComposto()
 
     if (!analex->temMaisPedacos())
         throw runtime_error ("Esperado 'end' no final de comando composto.");
+
+    prox = analex->proximoPedaco(true);
+    if (prox != pontoVirgula)
+        throw runtime_error ("Esperado ';' na declaracao de comando composto.");
 }
 
 
@@ -539,15 +603,9 @@ void AnalisadorSintatico::compilaAtribuicao()
         if (s->tiposimb != simb_variavel && s->tiposimb != simb_parametro)
             throw runtime_error ("Variavel/Parametro nao existe.");
 
-
-
     prox = analex->proximoPedaco(true);
-    if (prox != doisPontos)
-        throw runtime_error ("Esperado ':' antes de '=' em atribuicao.");
-
-    prox = analex->proximoPedaco(true);
-    if (prox != igual)
-        throw runtime_error ("Esperado '=' depois de ':' em atribuicao.");
+    if (prox != atribuicao)
+        throw runtime_error ("Esperado ':=' em atribuicao.");
 
     if (s->tiposimb == simb_variavel)
     {
@@ -561,6 +619,9 @@ void AnalisadorSintatico::compilaAtribuicao()
     else
         compilaExpressaoLogica();
 
+    prox = analex->proximoPedaco(true);
+    if (prox != pontoVirgula)
+        throw runtime_error ("Esperado ';' na declaracao de programa.");
 
 }
 
@@ -568,7 +629,8 @@ void AnalisadorSintatico::compilaAtribuicao()
 void AnalisadorSintatico::compilaExpressaoAritmetica()
 {
     compilaTermo();
-    while(analex->proximoPedaco(false) == mais || analex->proximoPedaco(false) == menos)
+    TipoPedaco prox = analex->proximoPedaco(false);
+    while(prox == mais || prox == menos)
     {
         analex->proximoPedaco(true);
         compilaTermo();
@@ -581,8 +643,8 @@ void AnalisadorSintatico::compilaTermo()
     TipoPedaco prox = analex->proximoPedaco(false);
     while(prox == vezes || prox == dividido || prox == resto)
     {
-        prox = analex->proximoPedaco(true);
         compilaFator();
+        prox = analex->proximoPedaco(false);
     }
 }
 
@@ -611,12 +673,10 @@ void AnalisadorSintatico::compilaFator()
         else
         {
             Simbolo* s = tabela->getSimbolo(analex->getNome());
-            if (s->tiposimb != simb_variavel)
+            if (s->tiposimb != simb_variavel && s->tiposimb != simb_parametro)
                 throw runtime_error ("Variavel nao existe.");
 
-            Variavel* v = (Variavel*)s;
-
-            if (v->tipo != var_inteiro)
+            if (s->tipo != var_inteiro)
                 throw runtime_error ("Variavel nao eh inteira.");
         }
     }
@@ -709,7 +769,8 @@ void AnalisadorSintatico::compilaExpressaoLogica()
         prox = analex->proximoPedaco(true);
         prox = analex->proximoPedaco(true);
 
-        if (prox == verdadeiro || prox == falso || tabela->getSimbolo(analex->getNome())->TipoVar == var_booleano)
+        if (!(prox == verdadeiro || prox == falso || tabela->getSimbolo(analex->getNome())->tipo == var_booleano))
+            throw runtime_error("Tipos incompativeis");
     }
     else
         compilaExpressaoRelacional();

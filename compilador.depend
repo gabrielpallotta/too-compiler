@@ -128,12 +128,13 @@
 	<vector>
 	<string>
 
-1512394476 source:f:\compilador\main.cpp
+1512504054 source:f:\compilador\main.cpp
 	<iostream>
 	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
 	<stdexcept>
 
-1512468336 source:f:\compilador\analisadorlexico.cpp
+1512501874 source:f:\compilador\analisadorlexico.cpp
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
 	<string.h>
@@ -145,7 +146,7 @@
 	<stdio.h>
 	"header/Simbolo.h"
 
-1512473760 source:f:\compilador\analisadorsintatico.cpp
+1512504562 source:f:\compilador\analisadorsintatico.cpp
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
@@ -168,7 +169,7 @@
 	"header/Simbolo.h"
 	<vector>
 
-1512473782 source:f:\compilador\tabeladesimbolos.cpp
+1512475158 source:f:\compilador\tabeladesimbolos.cpp
 	"header/TabelaDeSimbolos.h"
 	<iostream>
 	<vector>
@@ -179,4 +180,52 @@
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
+
+1512501874 source:g:\compilador\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1512468250 g:\compilador\header\analisadorlexico.h
+	<stdio.h>
+	"header/Simbolo.h"
+
+1512473660 g:\compilador\header\simbolo.h
+	<vector>
+	<string>
+
+1512504054 source:g:\compilador\main.cpp
+	<iostream>
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	<stdexcept>
+
+1512470146 g:\compilador\header\analisadorsintatico.h
+	"AnalisadorLexico.h"
+	"TabelaDeSimbolos.h"
+
+1512469708 g:\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
+1512473508 source:g:\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1512475158 source:g:\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<iostream>
+	<vector>
+	<string.h>
+	<string>
+
+1512504562 source:g:\compilador\analisadorsintatico.cpp
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<stdexcept>
+	<iostream>
 
