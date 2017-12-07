@@ -34,8 +34,10 @@ void Metodo::adicionarParametro (Variavel* p)
 	this->parametros.push_back(p);
 }
 
-Variavel* Metodo::getParametro (string s)
+Variavel* Metodo::getParametro (int i)
 {
-	// retorna null se não achar parametro
-	// retorna parametro se achar
+    if (i >= this->parametros.size() || i < 0)
+        return NULL;
+    else
+        return this->parametros[i];
 }

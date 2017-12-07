@@ -3,6 +3,7 @@
 
 #include "header/Simbolo.h"
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -10,13 +11,15 @@ class TabelaDeSimbolos
 {
 	private:
 		vector<vector<Simbolo*> > listaDeSimbolos;
+	    stack<char*> nomes;
 	public:
 	    int nivelAtual;
 		TabelaDeSimbolos();
 		void guarde (Simbolo*);
 		void elimineNivel ();
-		void adicioneNivel ();
+		void adicioneNivel (char*);
 		Simbolo* getSimbolo (char*);
+		char* getNomeNivel();
 };
 	// estrutura armazenando simbolos;
   // metodo guarde();

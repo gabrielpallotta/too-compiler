@@ -67,45 +67,55 @@
 1511344604 source:f:\_too\too-compiler\main.cpp
 	<iostream>
 
-1511664314 source:d:\compilador\analisadorlexico.cpp
+1512605326 source:d:\compilador\analisadorlexico.cpp
 	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
 	<string.h>
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
 
-1511664252 d:\compilador\header\analisadorlexico.h
+1512605262 d:\compilador\header\analisadorlexico.h
 	<stdio.h>
+	"header/Simbolo.h"
 
-1511666188 source:d:\compilador\analisadorsintatico.cpp
+1512608298 source:d:\compilador\analisadorsintatico.cpp
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"
+	<stdexcept>
+	<iostream>
 
-1511661282 d:\compilador\header\analisadorsintatico.h
+1512607752 d:\compilador\header\analisadorsintatico.h
 	"AnalisadorLexico.h"
 	"TabelaDeSimbolos.h"
 
-1511666048 d:\compilador\header\tabeladesimbolos.h
+1512584468 d:\compilador\header\tabeladesimbolos.h
 	"header/Simbolo.h"
 	<vector>
-	<string>
+	<stack>
 
-1511666392 d:\compilador\header\simbolo.h
+1512606710 d:\compilador\header\simbolo.h
 	<vector>
 	<string>
 
-1511280950 source:d:\compilador\main.cpp
+1512583612 source:d:\compilador\main.cpp
 	<iostream>
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	<stdexcept>
 
-1511666310 source:d:\compilador\simbolo.cpp
+1512606770 source:d:\compilador\simbolo.cpp
 	"header/Simbolo.h"
 	<vector>
 
-1511666090 source:d:\compilador\tabeladesimbolos.cpp
+1512605646 source:d:\compilador\tabeladesimbolos.cpp
 	"header/TabelaDeSimbolos.h"
+	<iostream>
 	<vector>
+	<string.h>
 	<string>
+	<stack>
 
 1511717646 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\analisadorlexico.cpp
 	"header/AnalisadorLexico.h"
@@ -197,7 +207,7 @@
 	<vector>
 	<string>
 
-1512504054 source:g:\compilador\main.cpp
+1512578770 source:g:\compilador\main.cpp
 	<iostream>
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
@@ -222,7 +232,7 @@
 	<string.h>
 	<string>
 
-1512504562 source:g:\compilador\analisadorsintatico.cpp
+1512578716 source:g:\compilador\analisadorsintatico.cpp
 	"header/AnalisadorSintatico.h"
 	"header/AnalisadorLexico.h"
 	"header/Simbolo.h"

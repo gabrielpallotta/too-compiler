@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "=", ":=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or", "<>"};
+const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "mod", "not", "procedure", "program", "then", "true", "var", "while", "do", ">", ">=", "<", "<=", "=", ":=", "/", "*", "+", "-", ".", ",", ";", ":", "(", ")", "or", "<>"};
 
 const int nPalavras   = 17;
 const int nOperadores = 18;
@@ -140,4 +140,12 @@ char* AnalisadorLexico::getNome()
 int AnalisadorLexico::getValor()
 {
 	return ultimoValor;
+}
+
+void AnalisadorLexico::desconsumirPedaco()
+{
+    char* s = getNome();
+    int size = strlen(s);
+    for (int i = 1; i <= size; i++)
+        ungetc(s[size - i], arquivo);
 }

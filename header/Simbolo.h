@@ -46,7 +46,7 @@ class Metodo: public Simbolo
 		Metodo(char*, int, TipoVar, TipoSimbolo);
 		int getNumeroParametros();
 		void adicionarParametro(Variavel*);
-		Variavel* getParametro(string);
+		Variavel* getParametro (int i);
 		TipoVar getTipoDeRetorno();
 };
 

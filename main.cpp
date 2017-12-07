@@ -2,11 +2,12 @@
 #include "header/AnalisadorSintatico.h"
 #include "header/AnalisadorLexico.h"
 #include <stdexcept>
+
 using namespace std;
 
 int main()
 {
-    AnalisadorSintatico* anasint = new AnalisadorSintatico((char*)"test/teste.pas");
+    AnalisadorSintatico* anasint = new AnalisadorSintatico((char*)"test/Certo.pas");
     try
     {
         anasint->compilaInicioDePrograma();

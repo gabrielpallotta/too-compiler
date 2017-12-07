@@ -22,6 +22,7 @@ typedef enum {
 	verdadeiro,
 	variavel,
 	enquanto,
+	faca,
     maior,
     maiorIgual,
     menor,
@@ -56,6 +57,7 @@ class AnalisadorLexico
 		AnalisadorLexico(char*);
 		TipoPedaco proximoPedaco(bool);
 		int        temMaisPedacos();
+		void       desconsumirPedaco();
 		char*      getNome();
 		int        getValor();
 	private:

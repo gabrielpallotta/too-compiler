@@ -17,8 +17,7 @@ class AnalisadorSintatico
 	    void compilaDeclaracaoDeProcedimento();
 	    void compilaDeclaracaoDeFuncao();
 
-	    void compilaProcedimento();
-	    void compilaFuncao();
+	    void compilaMetodo();
 
 	    void compilaSe();
 	    void compilaEnquanto();

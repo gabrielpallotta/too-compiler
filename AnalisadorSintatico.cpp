@@ -15,8 +15,6 @@ AnalisadorSintatico::AnalisadorSintatico(char* arquivo)
 
 void AnalisadorSintatico::compilaInicioDePrograma()
 {
-    tabela->adicioneNivel();
-
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != programa)
         throw runtime_error ("Esperado 'program' no inicio do programa.");
@@ -24,6 +22,8 @@ void AnalisadorSintatico::compilaInicioDePrograma()
     prox = analex->proximoPedaco(true);
     if (prox != identificador)
         throw runtime_error ("Esperado identificador na declaracao do programa.");
+
+    tabela->adicioneNivel(analex->getNome());
 
     prox = analex->proximoPedaco(true);
     if (prox != pontoVirgula)
@@ -55,6 +55,7 @@ void AnalisadorSintatico::compilaProgramaPrincipal()
         throw runtime_error ("Esperado '.' no fim do programa.");
 
 }
+
 void AnalisadorSintatico::compilaDeclaracaoDeVariavel()
 {
     TipoPedaco prox = analex->proximoPedaco(true);
@@ -207,7 +208,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeProcedimento()
         proc->adicionarParametro(parametros[i]);
 
     tabela->guarde(proc);
-    tabela->adicioneNivel();
+    tabela->adicioneNivel(proc->nome);
 
     for (int i = 0; i < parametros.size(); i++)
     {
@@ -294,7 +295,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
 
         prox = analex->proximoPedaco(true);
         if (prox != inteiro && prox != booleano)
-            throw runtime_error ("Esperado tipo de retorno (inteiro ou booleano) da funcao");
+            throw runtime_error ("Esperado tipo de parametro (inteiro ou booleano) na declaracao da funcao");
 
         TipoVar var;
 
@@ -337,7 +338,7 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
         func->adicionarParametro(parametros[i]);
 
     tabela->guarde(func);
-    tabela->adicioneNivel();
+    tabela->adicioneNivel(func->nome);
 
     for (int i = 0; i < parametros.size(); i++)
     {
@@ -349,8 +350,13 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
         tabela->guarde(parametros[i]);
     }
 
-    prox = analex->proximoPedaco(false);
+    prox = analex->proximoPedaco(true);
 
+    if (prox != pontoVirgula)
+        throw runtime_error ("Esperado ';' após declaracao de funcao.");
+
+
+    prox = analex->proximoPedaco(false);
     while (prox != comeco)
     {
         if (prox == variavel)
@@ -359,6 +365,8 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
             compilaDeclaracaoDeProcedimento();
         else if (prox == funcao)
             compilaDeclaracaoDeFuncao();
+        else
+            throw runtime_error ("Token inesperado apos declaracao de funcao.");
 
         prox = analex->proximoPedaco(false);
     }
@@ -368,79 +376,85 @@ void AnalisadorSintatico::compilaDeclaracaoDeFuncao()
     tabela->elimineNivel();
 }
 
-
-void AnalisadorSintatico::compilaProcedimento()
+void AnalisadorSintatico::compilaMetodo()
 {
     TipoPedaco prox = analex->proximoPedaco(true);
     if (prox != identificador)
-        throw runtime_error ("Esperado identificador na chamada de procedimento.");
+        throw runtime_error ("Esperado identificador na chamada de metodo.");
 
-    Metodo* proc = (Metodo*)tabela->getSimbolo(analex->getNome());
+    Metodo* met = (Metodo*)tabela->getSimbolo(analex->getNome());
 
-    if (proc == 0)
+    if (met == 0)
         throw runtime_error ("Identificador inesperado");
 
     prox = analex->proximoPedaco(true);
     if (prox != abreParenteses)
-        throw runtime_error ("Esperado '(' apos chamada de procedimento");
+        throw runtime_error ("Esperado '(' apos chamada de metodo");
 
-    while (prox == identificador)
+    int i = 0;
+    prox = analex->proximoPedaco(true);
+    while (prox == identificador || prox == numero || prox == verdadeiro || prox == falso)
     {
-        Variavel* param = proc->getParametro(analex->getNome());
-        if (param == 0 || tabela->getSimbolo(analex->getNome())->tiposimb != param->tiposimb)
-            throw runtime_error ("Parametro invalido na chamada de procedimento");
+        Simbolo* param = met->getParametro(i);
+
+        if (param == NULL)
+            throw runtime_error ("Numero de parametros nao corresponde a declaracao da metodo.");
+
+        switch (prox)
+        {
+            case identificador:
+            {
+                Simbolo* simb = tabela->getSimbolo(analex->getNome());
+
+                if (simb == NULL)
+                    throw runtime_error ("Identificador desconhecido na chamada de metodo.");
+                else if (simb->tiposimb == simb_procedimento)
+                    throw runtime_error ("Procedimento como parametro de metodo.");
+                else
+                {
+                    if (param == 0 || tabela->getSimbolo(analex->getNome())->tipo != param->tipo)
+                        throw runtime_error ("Parametro invalido na chamada de metodo");
+
+                    if (param->tiposimb == simb_funcao)
+                    {
+                        analex->desconsumirPedaco();
+                        compilaMetodo();
+                    }
+                }
+                break;
+            }
+            case numero:
+                if (param->tipo != var_inteiro)
+                    throw runtime_error ("Tipo de parametro nao corresponde a declaracao da metodo.");
+
+                break;
+
+            case verdadeiro:
+            case falso:
+                if (param->tipo != var_booleano)
+                    throw runtime_error ("Tipo de parametro nao corresponde a declaracao da metodo.");
+
+                break;
+        }
+
+        i++;
 
         prox = analex->proximoPedaco(true);
+
+        if (prox == fechaParenteses)
+            break;
+
         if (prox != virgula)
-            throw runtime_error ("Esperado ',' para separarar parametros na chamada de procedimento.");
+            throw runtime_error ("Esperado ',' na chamada de metodo.");
 
         prox = analex->proximoPedaco(true);
     }
 
-    prox = analex->proximoPedaco(true);
-    if (prox != fechaParenteses && prox != identificador)
-        throw runtime_error ("Esperado ')' ou identificador na chamada de procedimento");
+    if (prox != fechaParenteses)
+        throw runtime_error ("Esperado ')' na chamada de metodo.");
 
-    prox = analex->proximoPedaco(true);
-    if (prox != pontoVirgula)
-        throw runtime_error ("Esperado ';' na declaracao de programa.");
-}
-
-void AnalisadorSintatico::compilaFuncao()
-{
-    TipoPedaco prox = analex->proximoPedaco(true);
-    if (prox != identificador)
-        throw runtime_error ("Esperado identificador na chamada de funcao.");
-
-    Metodo* func = (Metodo*)tabela->getSimbolo(analex->getNome());
-
-    if (func == 0)
-        throw runtime_error ("Identificador inesperado");
-
-    prox = analex->proximoPedaco(true);
-    if (prox != abreParenteses)
-        throw runtime_error ("Esperado '(' apos chamada de funcao");
-
-    while (prox == identificador)
-    {
-        Variavel* param = func->getParametro(analex->getNome());
-        if (param == 0 || tabela->getSimbolo(analex->getNome())->tiposimb != param->tiposimb)
-            throw runtime_error ("Parametro invalido na chamada de funcao");
-
-        prox = analex->proximoPedaco(true);
-        if (prox != virgula)
-            throw runtime_error ("Esperado ',' para separarar parametros na chamada de funcao.");
-
-        prox = analex->proximoPedaco(true);
-    }
-
-    prox = analex->proximoPedaco(true);
-    if (prox != fechaParenteses && prox != identificador)
-        throw runtime_error ("Esperado ')' ou identificador na chamada de funcao");
-
-    prox = analex->proximoPedaco(true);
-    if (prox != pontoVirgula)
-        throw runtime_error ("Esperado ';' na declaracao de programa.");
+    if (i != met->getNumeroParametros())
+        throw runtime_error ("Numero de parametros nao corresponde a declaracao da metodo.");
 }
 
 
@@ -462,7 +476,6 @@ void AnalisadorSintatico::compilaSe()
             continue;
         else
         {
-            prox = analex->proximoPedaco(true);
             if (prox != fechaParenteses)
                 throw runtime_error ("Esperado ')' no fim da condicao.");
             else
@@ -474,7 +487,7 @@ void AnalisadorSintatico::compilaSe()
     if (prox != entao)
         throw runtime_error ("Esperado 'Then' no fim da condicao.");
 
-    prox = analex->proximoPedaco(true);
+    prox = analex->proximoPedaco(false);
     if (prox == comeco)
     {
         compilaComandoComposto();
@@ -521,7 +534,7 @@ void AnalisadorSintatico::compilaEnquanto()
     while (true)
     {
         compilaExpressaoLogica();
-        prox = analex->proximoPedaco(true);
+        prox = analex->proximoPedaco(false);
         if (prox == e || prox == ou)
             continue;
         else
@@ -533,6 +546,12 @@ void AnalisadorSintatico::compilaEnquanto()
                 break;
         }
     }
+
+    prox = analex->proximoPedaco(true);
+    if (prox != faca)
+        throw runtime_error ("Esperado 'do' apos while.");
+
+    compilaComandoComposto();
 }
 
 
@@ -561,11 +580,24 @@ void AnalisadorSintatico::compilaComando()
       if (s->tiposimb == simb_variavel || s->tiposimb == simb_parametro)
         compilaAtribuicao();
       else if (s->tiposimb == simb_funcao)
-        compilaFuncao();
+      {
+          analex->proximoPedaco(true);
+
+          prox = analex->proximoPedaco(false);
+
+          analex->desconsumirPedaco();
+
+          if (prox == abreParenteses)
+              compilaMetodo();
+          else if (prox == atribuicao)
+              compilaAtribuicao();
+          else
+              throw runtime_error ("Identificador de funcao invalido.");
+      }
       else if (s->tiposimb == simb_procedimento)
-        compilaProcedimento();
+        compilaMetodo();
       else
-        throw runtime_error ("Identificador inválido.");
+        throw runtime_error ("Identificador invalido.");
     }
 }
 
@@ -577,18 +609,18 @@ void AnalisadorSintatico::compilaComandoComposto()
 
     prox = analex->proximoPedaco(false);
 
-    while (prox != fim && analex->temMaisPedacos())
+    while (prox != fim)
     {
         compilaComando();
-        prox = analex->proximoPedaco(true);
+        prox = analex->proximoPedaco(false);
     }
 
-    if (!analex->temMaisPedacos())
-        throw runtime_error ("Esperado 'end' no final de comando composto.");
+    // Consome o end do comando composto
+    prox = analex->proximoPedaco(true);
 
     prox = analex->proximoPedaco(true);
     if (prox != pontoVirgula)
-        throw runtime_error ("Esperado ';' na declaracao de comando composto.");
+        throw runtime_error ("Esperado ';' em comando composto.");
 }
 
 
@@ -600,29 +632,43 @@ void AnalisadorSintatico::compilaAtribuicao()
         throw runtime_error ("Esperado identificador.");
 
     Simbolo* s = tabela->getSimbolo(analex->getNome());
+
+    if (s == NULL)
+        throw runtime_error ("Variavel/Parametro nao existe em atribuicao.");
+
+    if (s->tiposimb == simb_funcao)
+    {
+        Metodo* func = (Metodo*)s;
+        if (tabela->getNomeNivel() != func->nome)
+            throw runtime_error ("Atribuicao de valor a funcao fora do escopo pertinente.");
+
+        prox = analex->proximoPedaco(true);
+        if (prox != atribuicao)
+            throw runtime_error ("Esperado ':=' em atribuicao.");
+
+        if(func->tipo == var_inteiro)
+            compilaExpressaoAritmetica();
+        else
+            compilaExpressaoLogica();
+        }
+    else
+    {
         if (s->tiposimb != simb_variavel && s->tiposimb != simb_parametro)
             throw runtime_error ("Variavel/Parametro nao existe.");
 
-    prox = analex->proximoPedaco(true);
-    if (prox != atribuicao)
-        throw runtime_error ("Esperado ':=' em atribuicao.");
+        prox = analex->proximoPedaco(true);
+        if (prox != atribuicao)
+            throw runtime_error ("Esperado ':=' em atribuicao.");
 
-    if (s->tiposimb == simb_variavel)
-    {
         if(((Variavel*)s)->tipo == var_inteiro)
             compilaExpressaoAritmetica();
         else
             compilaExpressaoLogica();
     }
-    else if(((Variavel*)s)->tipo == var_inteiro)
-        compilaExpressaoAritmetica();
-    else
-        compilaExpressaoLogica();
 
     prox = analex->proximoPedaco(true);
     if (prox != pontoVirgula)
-        throw runtime_error ("Esperado ';' na declaracao de programa.");
-
+        throw runtime_error ("Esperado ';' apos atribuicao.");
 }
 
 
@@ -634,6 +680,7 @@ void AnalisadorSintatico::compilaExpressaoAritmetica()
     {
         analex->proximoPedaco(true);
         compilaTermo();
+        prox = analex->proximoPedaco(false);
     }
 }
 
@@ -643,6 +690,7 @@ void AnalisadorSintatico::compilaTermo()
     TipoPedaco prox = analex->proximoPedaco(false);
     while(prox == vezes || prox == dividido || prox == resto)
     {
+        analex->proximoPedaco(true);
         compilaFator();
         prox = analex->proximoPedaco(false);
     }
@@ -659,40 +707,41 @@ void AnalisadorSintatico::compilaFator()
     {
         Simbolo* s = tabela->getSimbolo(analex->getNome());
 
-        if (s->tiposimb == simb_funcao)
+        if (s == NULL)
+            throw runtime_error ("Identificador nao existe em expressao aritmetica.");
+
+        switch (s->tiposimb)
         {
-            Metodo* f = (Metodo*)s;
+            case simb_parametro:
+            case simb_variavel:
+                if (s->tipo != var_inteiro)
+                    throw runtime_error ("Variavel nao eh inteira.");
 
-            if (f->tipo != var_inteiro)
-                throw runtime_error ("Funcao nao retorna um inteiro.");
+                break;
+            case simb_funcao:
+                if (s->tipo != var_inteiro)
+                    throw runtime_error ("Funcao na expressao aritmetica nao retorna um inteiro.");
 
-            compilaFuncao();
-        }
-        else if (!(s->tiposimb != simb_variavel) || ((Metodo*)s)->tipo != var_inteiro)
-            throw runtime_error ("Funcao deve retornar inteiro no fator.");
-        else
-        {
-            Simbolo* s = tabela->getSimbolo(analex->getNome());
-            if (s->tiposimb != simb_variavel && s->tiposimb != simb_parametro)
-                throw runtime_error ("Variavel nao existe.");
+                analex->desconsumirPedaco();
 
-            if (s->tipo != var_inteiro)
-                throw runtime_error ("Variavel nao eh inteira.");
+                compilaMetodo();
+
+                break;
+            case simb_procedimento:
+                throw runtime_error ("Parametro nao pode ser usado em expressao aritmetica pois nao retorna valor.");
+                break;
+
         }
     }
-    else
+    else if (prox == abreParenteses)
     {
-        if (prox == abreParenteses)
-        {
-            compilaExpressaoAritmetica();
-            prox = analex->proximoPedaco(true);
-            if (prox != fechaParenteses)
-                throw runtime_error ("Esperado ')' ao final de uma expressao aritmetica.");
-        }
-        else
-            if (prox != numero)
-                throw runtime_error ("Esperado numero.");
+        compilaExpressaoAritmetica();
+        prox = analex->proximoPedaco(true);
+        if (prox != fechaParenteses)
+            throw runtime_error ("Esperado ')' ao final de uma expressao aritmetica.");
     }
+    else if (prox != numero)
+        throw runtime_error ("Esperado numero.");
 }
 
 
@@ -727,7 +776,7 @@ void AnalisadorSintatico::compilaFatorRelacional()
     {
         Simbolo* s = tabela->getSimbolo(analex->getNome());
         if(s->tiposimb == simb_funcao && ((Metodo*)s)->tipo == var_booleano)
-            compilaFuncao();
+            compilaMetodo();
         else if(!(s->tiposimb == simb_variavel) || !(((Variavel*)s)->tipo == var_booleano))
             compilaExpressaoRelacional();
     }
@@ -742,13 +791,13 @@ void AnalisadorSintatico::compilaFatorRelacional()
         throw runtime_error ("Esperado identificador booleano no fator relacional");
 }
 
-
+// CONSERTAR AQUI
 void AnalisadorSintatico::compilaExpressaoLogica()
 {
     TipoPedaco prox = analex->proximoPedaco(false);
 
     if (!(prox == identificador || prox == numero || prox == verdadeiro || prox == falso))
-        throw runtime_error ("Esperado identificador ou valor");
+        throw runtime_error ("Esperado identificador ou valor em expressao logica.");
 
     if (prox == identificador)
         if (tabela->getSimbolo(analex->getNome()) == NULL)
