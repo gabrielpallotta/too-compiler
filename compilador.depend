@@ -64,3 +64,178 @@
 	"header/Simbolo.h"
 	<vector>
 
+1511344604 source:f:\_too\too-compiler\main.cpp
+	<iostream>
+
+1512605326 source:d:\compilador\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1512605262 d:\compilador\header\analisadorlexico.h
+	<stdio.h>
+	"header/Simbolo.h"
+
+1512608298 source:d:\compilador\analisadorsintatico.cpp
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<stdexcept>
+	<iostream>
+
+1512607752 d:\compilador\header\analisadorsintatico.h
+	"AnalisadorLexico.h"
+	"TabelaDeSimbolos.h"
+
+1512584468 d:\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+	<stack>
+
+1512606710 d:\compilador\header\simbolo.h
+	<vector>
+	<string>
+
+1512583612 source:d:\compilador\main.cpp
+	<iostream>
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	<stdexcept>
+
+1512606770 source:d:\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1512605646 source:d:\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<iostream>
+	<vector>
+	<string.h>
+	<string>
+	<stack>
+
+1511717646 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1511717646 e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\header\analisadorlexico.h
+	<stdio.h>
+
+1511717616 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\main.cpp
+	<iostream>
+
+1511717646 source:e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1511717646 e:\cotuca\2° ano\4° semestre\too\c++\too-compiler\header\simbolo.h
+	<vector>
+	<string>
+
+1512504054 source:f:\compilador\main.cpp
+	<iostream>
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	<stdexcept>
+
+1512501874 source:f:\compilador\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1512468250 f:\compilador\header\analisadorlexico.h
+	<stdio.h>
+	"header/Simbolo.h"
+
+1512504562 source:f:\compilador\analisadorsintatico.cpp
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<stdexcept>
+	<iostream>
+
+1512470146 f:\compilador\header\analisadorsintatico.h
+	"AnalisadorLexico.h"
+	"TabelaDeSimbolos.h"
+
+1512469708 f:\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
+1512473660 f:\compilador\header\simbolo.h
+	<vector>
+	<string>
+
+1512473508 source:f:\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1512475158 source:f:\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<iostream>
+	<vector>
+	<string.h>
+	<string>
+
+1511779868 f:\compilador\analisadorsintatico.cpp
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+
+1512501874 source:g:\compilador\analisadorlexico.cpp
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+
+1512468250 g:\compilador\header\analisadorlexico.h
+	<stdio.h>
+	"header/Simbolo.h"
+
+1512473660 g:\compilador\header\simbolo.h
+	<vector>
+	<string>
+
+1512578770 source:g:\compilador\main.cpp
+	<iostream>
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	<stdexcept>
+
+1512470146 g:\compilador\header\analisadorsintatico.h
+	"AnalisadorLexico.h"
+	"TabelaDeSimbolos.h"
+
+1512469708 g:\compilador\header\tabeladesimbolos.h
+	"header/Simbolo.h"
+	<vector>
+
+1512473508 source:g:\compilador\simbolo.cpp
+	"header/Simbolo.h"
+	<vector>
+
+1512475158 source:g:\compilador\tabeladesimbolos.cpp
+	"header/TabelaDeSimbolos.h"
+	<iostream>
+	<vector>
+	<string.h>
+	<string>
+
+1512578716 source:g:\compilador\analisadorsintatico.cpp
+	"header/AnalisadorSintatico.h"
+	"header/AnalisadorLexico.h"
+	"header/Simbolo.h"
+	<stdexcept>
+	<iostream>
+

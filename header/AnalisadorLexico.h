@@ -2,17 +2,19 @@
 #define AnalisadorLexico_H
 
 #include <stdio.h>
+#include "header/Simbolo.h"
 
 typedef enum {
 	e,
 	comeco,
-	boleano,
+	booleano,
 	senao,
 	fim,
 	falso,
     funcao,
 	se,
 	inteiro,
+	resto,
 	nao,
     procedimento,
 	programa,
@@ -20,39 +22,44 @@ typedef enum {
 	verdadeiro,
 	variavel,
 	enquanto,
+	faca,
     maior,
     maiorIgual,
     menor,
     menorIgual,
-    igualIgual,
-    igual,
-    barra,
-    asterisco,
+	igual,
+	atribuicao,
+    dividido,
+    vezes,
     mais,
     menos,
     ponto,
+    virgula,
     pontoVirgula,
-    doisPontos,
+	doisPontos,
+	abreParenteses,
+	fechaParenteses,
+	ou,
+	diferente,
 	desconhecido,
 	identificador,
 	numero,
 	fimDeArquivo
 } TipoPedaco;
 
-const char* palavrasReservadas[] = { "and", "begin", "boolean", "else", "end", "false", "function", "if", "integer", "not", "procedure", "program", "then", "true", "var", "while", ">", ">=", "<", "<=", "==", "=", "/", "*", "+", "-", ".", ";", ":"};
-
-const int nPalavras   = 16;
-const int nOperadores = 10;
+extern const char* palavrasReservadas[];
+extern const int nPalavras;
+extern const int nOperadores;
 
 class AnalisadorLexico
 {
     public:
 		AnalisadorLexico(char*);
-		TipoPedaco proximoPedaco(FILE*);
+		TipoPedaco proximoPedaco(bool);
 		int        temMaisPedacos();
+		void       desconsumirPedaco();
 		char*      getNome();
 		int        getValor();
-
 	private:
 		FILE* arquivo;
 		char* ultimoIdentificador;

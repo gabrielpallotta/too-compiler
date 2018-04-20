@@ -2,59 +2,52 @@
 #define Simbolo_H
 
 #include <vector>
+#include <string>
 
 using namespace std;
 
 typedef enum
 {
-    inteiro,
-    booleano
-} Tipo;
+    simb_funcao,
+    simb_variavel,
+    simb_parametro,
+    simb_procedimento
+} TipoSimbolo;
+
+typedef enum
+{
+    var_inteiro,
+    var_booleano,
+    var_void
+} TipoVar;
 
 class Simbolo
 {
-	private:
-		char nome [256];
-		unsigned char nivel;
-};
-
-class Parametro: public Simbolo
-{
-	private:
-		Tipo tipo;
 	public:
-		Parametro(Tipo);
-		Tipo getTipo();
+		char* nome;
+		unsigned char nivel;
+		TipoSimbolo tiposimb;
+		TipoVar tipo;
+		Simbolo(char*, int, TipoVar, TipoSimbolo);
+		Simbolo();
 };
-
 
 class Variavel: public Simbolo
 {
-	private:
-		Tipo tipo;
 	public:
-		Variavel(Tipo);
-		Tipo getTipo();
+		Variavel(char*, int, TipoVar, TipoSimbolo);
 };
 
-class Funcao: public Simbolo
+class Metodo: public Simbolo
 {
 	private:
-		Tipo tipoDeRetorno;
-		vector<Parametro> parametros;
+		vector<Variavel*> parametros;
 	public:
-		Funcao(Tipo);
+		Metodo(char*, int, TipoVar, TipoSimbolo);
 		int getNumeroParametros();
-		Tipo getTipoDeRetorno();
-};
-
-class Procedimento: public Simbolo
-{
-	private:
-		vector<Parametro> parametros;
-	public:
-		int getNumeroParametros();
-		void adicionarParametro(Parametro);
+		void adicionarParametro(Variavel*);
+		Variavel* getParametro (int i);
+		TipoVar getTipoDeRetorno();
 };
 
 #endif

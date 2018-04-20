@@ -3,53 +3,41 @@
 
 using namespace std;
 
-// Parametro
-Parametro::Parametro (Tipo tipo)
-{
-	this->tipo = tipo;
-}
+Simbolo::Simbolo()
+{}
 
-Tipo Parametro::getTipo ()
+Simbolo::Simbolo(char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb)
 {
-	return this->tipo;
+    this->nome = nome;
+    this->nivel = nivel;
+    this->tipo = tipo;
+    this->tiposimb = tiposimb;
 }
 
 // Variavel
-Variavel::Variavel (Tipo tipo)
+Variavel::Variavel (char* nome, int nivel, TipoVar tipo, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tipo, tiposimb)
+{}
+
+// Metodo
+Metodo::Metodo (char* nome, int nivel, TipoVar tipoDeRetorno, TipoSimbolo tiposimb) : Simbolo(nome, nivel, tipoDeRetorno, tiposimb)
 {
-	this->tipo = tipo;
+	this->parametros = vector<Variavel*>();
 }
 
-Tipo Variavel::getTipo ()
-{
-	return this->tipo;
-}
-
-// Funcao
-Funcao::Funcao (Tipo tipoDeRetorno)
-{
-	this->tipoDeRetorno = tipoDeRetorno;
-	this->parametros = vector<Parametro>();
-}
-
-Tipo Funcao::getTipoDeRetorno ()
-{
-	return this->tipoDeRetorno;
-}
-
-int Funcao::getNumeroParametros ()
+int Metodo::getNumeroParametros ()
 {
 	return this->parametros.size();
 }
 
-//Procedimento
-int Procedimento::getNumeroParametros ()
-{
-	return this->parametros.size();
-	this->parametros = vector<Parametro>();
-}
-
-void Procedimento::adicionarParametro (Parametro p)
+void Metodo::adicionarParametro (Variavel* p)
 {
 	this->parametros.push_back(p);
+}
+
+Variavel* Metodo::getParametro (int i)
+{
+    if (i >= this->parametros.size() || i < 0)
+        return NULL;
+    else
+        return this->parametros[i];
 }
